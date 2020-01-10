@@ -8,6 +8,7 @@
 
 import React, { Component } from 'react'
 import {
+  Platform,
   SafeAreaView,
   StyleSheet,
   ScrollView,
@@ -16,63 +17,31 @@ import {
   StatusBar,
 } from 'react-native';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 import SplashScreen from 'react-native-splash-screen'
 
 export default class App extends Component {
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide();
-    }, 1000)
+    }, 1000);
+    //android
+    if (Platform.OS == 'android') {
+      // StatusBar.setBackgroundColor('#FFFFFF');
+      const { Release, Model, Version, Fingerprint } = Platform.constants;
+      const platform = { Release, Model, Version, Fingerprint, OS: 'android' };
+      console.log(Platform)
+      console.log(StatusBar.currentHeight)
+    }
   }
   render() {
     return (
       <View style={styles.mainPage}>
-        <StatusBar barStyle="dark-content" />
-        <SafeAreaView>
+        <StatusBar barStyle="dark-content" backgroundColor="rgba(0, 0, 0, 0)" translucent={true}/>
+        <SafeAreaView style={styles.safeAreaView}>
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             style={styles.scrollView}>
-            <Header />
-            {global.HermesInternal == null ? null : (
-              <View style={styles.engine}>
-                <Text style={styles.footer}>Engine: Hermes</Text>
-              </View>
-            )}
-            <View style={styles.body}>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Step One</Text>
-                <Text style={styles.sectionDescription}>
-                  Edit <Text style={styles.highlight}>App.js</Text> to change this
-                  screen and then come back to see your edits.
-                </Text>
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>See Your Changes</Text>
-                <Text style={styles.sectionDescription}>
-                  <ReloadInstructions />
-                </Text>
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Debug</Text>
-                <Text style={styles.sectionDescription}>
-                  <DebugInstructions />
-                </Text>
-              </View>
-              <View style={styles.sectionContainer}>
-                <Text style={styles.sectionTitle}>Learn More</Text>
-                <Text style={styles.sectionDescription}>
-                  Read the docs to discover what to do next:
-                </Text>
-              </View>
-              <LearnMoreLinks />
-            </View>
+              <Text>111111111111111111</Text>
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -85,41 +54,13 @@ const styles = StyleSheet.create({
   mainPage: {
     flex: 1
   },
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingTop: StatusBar.currentHeight
+  },
   scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
+    backgroundColor: '#FFFFFF'
   },
 });
 
