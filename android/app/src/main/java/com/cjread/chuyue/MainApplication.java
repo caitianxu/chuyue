@@ -1,4 +1,4 @@
-package com.chuyue;
+package com.cjread.chuyue;
 
 import android.app.Application;
 import android.content.Context;
