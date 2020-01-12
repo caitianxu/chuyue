@@ -1,11 +1,3 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, { Component } from 'react'
 import {
   Platform,
@@ -14,12 +6,31 @@ import {
   ScrollView,
   View,
   Text,
+  Button,
   StatusBar,
 } from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen'
+import { createAppContainer } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
 
-export default class App extends Component {
+
+const styles = StyleSheet.create({
+  mainPage: {
+    flex: 1
+  },
+  safeAreaView: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    // paddingTop: StatusBar.currentHeight
+  },
+  scrollView: {
+    backgroundColor: '#FFFFFF'
+  },
+});
+
+class HomeScreen extends Component {
   componentDidMount() {
     setTimeout(() => {
       SplashScreen.hide();
@@ -30,37 +41,45 @@ export default class App extends Component {
       const { Release, Model, Version, Fingerprint } = Platform.constants;
       const platform = { Release, Model, Version, Fingerprint, OS: 'android' };
       console.log(Platform)
-      console.log(StatusBar.currentHeight)
     }
+  }
+  newPage = () => {
+    console.log(NavigationActions)
+    NavigationActions.navigate('Details')
   }
   render() {
     return (
       <View style={styles.mainPage}>
-        <StatusBar barStyle="dark-content" backgroundColor="rgba(0, 0, 0, 0)" translucent={true}/>
+        <StatusBar barStyle="dark-content" backgroundColor="rgba(0, 0, 0, 0)" translucent={true} />
         <SafeAreaView style={styles.safeAreaView}>
           <ScrollView
             contentInsetAdjustmentBehavior="automatic"
             style={styles.scrollView}>
-              <Text>111111111111111111</Text>
+            <Text>111111111111111111</Text>
+            <Button title="go to new page" onPress={this.newPage} />
           </ScrollView>
         </SafeAreaView>
       </View>
     )
   }
 }
-
-
-const styles = StyleSheet.create({
-  mainPage: {
-    flex: 1
+class DetailsScreen extends React.Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Details Screen</Text>
+      </View>
+    );
+  }
+}
+const AppNavigator = createStackNavigator({
+  Home: {
+    screen: HomeScreen,
+    Details: DetailsScreen,
   },
-  safeAreaView: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    paddingTop: StatusBar.currentHeight
-  },
-  scrollView: {
-    backgroundColor: '#FFFFFF'
-  },
-});
+},
+  {
+    initialRouteName: 'Home',
+  });
 
+export default createAppContainer(AppNavigator);
