@@ -18,26 +18,15 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 //pages
 import Index from "./src/pages/Index/Page";
-import Setting from "./src/pages/Setting/Page";
-import Test from "./src/pages/Test/Page";
+import Setting from "./src/pages/Setting/Page"
 
 
 const AppNavigator = createStackNavigator({
   Home: {
     screen: Index,
-    navigationOptions: {
-      // header: null // React元素或一个返回React元素HeaderProps的函数，以显示为标题。设置为null隐藏标题
-      headerTitle: "首页", // 设置标题
-    }
   },
   Setting: {
     screen: Setting,
-    navigationOptions: {
-      header: <View><Text>设置</Text></View>
-    }
-  },
-  Test: {
-    screen: Test,
   }
 },
   {
@@ -61,30 +50,8 @@ const TabNavigator = createBottomTabNavigator(
     Main: {
       screen: AppNavigator,
       navigationOptions: ({ navigation }) => {
-        console.log('xxxxxxxxx', navigation)
         return {
           tabBarLabel: '主页面',
-          tabBarIcon: ({ focused }) => {
-            return (
-              <Image
-                style={{ width: 30, height: 30 }}
-                source={
-                  focused
-                    ? require('./src/assets/img/ic_home_home_p.png')
-                    : require('./src/assets/img/ic_home_home_n.png')
-                }
-              />
-            )
-          }
-        }
-      }
-    },
-    Test: {
-      screen: Test,
-      navigationOptions: ({ navigation }) => {
-        console.log('yyyyyyyyy', navigation)
-        return {
-          tabBarLabel: '测试页面',
           tabBarIcon: ({ focused }) => {
             return (
               <Image
@@ -99,16 +66,47 @@ const TabNavigator = createBottomTabNavigator(
           }
         }
       }
+    },
+    Setting: {
+      screen: Setting,
+      navigationOptions: {
+        // 底部导航
+        tabBarLabel: '测试页面',
+        tabBarIcon: ({ focused }) => {
+          return (
+            <Image
+              style={{ width: 30, height: 30 }}
+              source={
+                focused
+                  ? require('./src/assets/img/ic_home_home_p.png')
+                  : require('./src/assets/img/ic_home_home_n.png')
+              }
+            />
+          )
+        }
+      }
+    }
+  },
+  {
+    initialRouteName: 'Main',
+    tabBarOptions: {
+      activeTintColor: 'gold',
+      inactiveTintColor: 'gray',
+      style: {
+        height: 50,
+      }
+    },
+    defaultNavigationOptions: ({ navigation }) => {
+      const { routeName } = navigation.state;
+      console.log('xxxxxxxxx', routeName)
+      return {
+        gesturesEnabled: false
+      }
     }
   }
 );
 const AppContainer = createAppContainer(TabNavigator);
 class App extends React.Component {
-  componentDidMount() {
-    setTimeout(() => {
-      SplashScreen.hide();
-    }, 1000);
-  }
   render() {
     return (
       <AppContainer />
