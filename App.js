@@ -22,7 +22,6 @@ import { createStackNavigator } from 'react-navigation-stack';
 //pages
 import Index from "./src/pages/Index/Page";
 import Setting from "./src/pages/Setting/Page";
-import Test from "./src/pages/Test/Page";
 import Me from "./src/pages/Me/Page";
 import Search from "./src/pages/Search/Page";
 import BookRack from "./src/pages/BookRack/Page";
@@ -93,9 +92,6 @@ const AppNavigator_2 = createStackNavigator({
     navigationOptions: {
       headerTitle: "设置"
     }
-  },
-  Test: {
-    screen: Test,
   }
 }, topBarOption);
 
