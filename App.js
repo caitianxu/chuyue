@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  Dimensions,
   Platform,
   SafeAreaView,
   StyleSheet,
@@ -8,10 +9,11 @@ import {
   Text,
   Button,
   StatusBar,
-  Image,
+  Image
 } from 'react-native';
 
-import SplashScreen from 'react-native-splash-screen'
+import { WebView } from 'react-native-webview';
+import SplashScreen from 'react-native-splash-screen';
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -20,6 +22,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Index from "./src/pages/Index/Page";
 import Setting from "./src/pages/Setting/Page";
 import Test from "./src/pages/Test/Page";
+
 
 
 const AppNavigator = createStackNavigator({
@@ -103,6 +106,21 @@ const TabNavigator = createBottomTabNavigator(
   }
 );
 const AppContainer = createAppContainer(TabNavigator);
+
+// Dimensions 用于获取设备宽、高、分辨率
+const { width, height } = Dimensions.get("window");
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  webView: {
+    width: width,
+    height: height
+  }
+});
+
 class App extends React.Component {
   componentDidMount() {
     setTimeout(() => {
@@ -111,7 +129,14 @@ class App extends React.Component {
   }
   render() {
     return (
-      <AppContainer />
+      // <AppContainer />
+      <View style={styles.container}>
+
+        <WebView
+          style={styles.webView}
+          source={{ uri: "http://h5.tuibook.com" }}
+        />
+      </View>
     )
   }
 }
