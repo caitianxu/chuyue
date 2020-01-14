@@ -8,7 +8,7 @@ export default class Page extends React.Component {
     };
   }
   newPage = () => {
-    this.props.navigation.navigate('Setting')
+    this.props.navigation.navigate('BarMe')
   }
   render() {
     return (

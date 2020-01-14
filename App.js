@@ -12,6 +12,7 @@ import {
   Image
 } from 'react-native';
 
+import Icons from 'react-native-vector-icons/Ionicons';
 import { WebView } from 'react-native-webview';
 import SplashScreen from 'react-native-splash-screen';
 import { createAppContainer } from 'react-navigation';
@@ -22,51 +23,100 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Index from "./src/pages/Index/Page";
 import Setting from "./src/pages/Setting/Page";
 import Test from "./src/pages/Test/Page";
+import Me from "./src/pages/Me/Page";
+import Search from "./src/pages/Search/Page";
+import BookRack from "./src/pages/BookRack/Page";
 
+// Dimensions 用于获取设备宽、高、分辨率
+const { width, height } = Dimensions.get("window");
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  webView: {
+    width: width,
+    height: height
+  },
+  headerBar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: '#f90'
+  },
+  headerSearch: {
+    paddingRight: 15,
+    paddingLeft: 15,
+    paddingTop: 10
+  }
+});
 
+//topBar 样式
+const topBarOption = {
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: '#286fd9',
+    },
+    headerTintColor: '#ffffff'
+  }
+}
+// 书架
+const AppNavigator_1 = createStackNavigator({
+  BookRack: {
+    screen: BookRack,
+    navigationOptions: {
+      headerTitle: "我的书架"
+    }
+  }
+}, topBarOption);
 
-const AppNavigator = createStackNavigator({
+//悦读
+const AppNavigator_2 = createStackNavigator({
   Home: {
     screen: Index,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: '微悦读',
+        headerRight: <View><Icons name='md-search' style={styles.headerSearch} size={25} color='white' onPress={(e) => {
+          navigation.navigate('Search');
+        }}></Icons></View>
+      }
+    }
+  },
+  Search: {
+    screen: Search,
     navigationOptions: {
-      // header: null // React元素或一个返回React元素HeaderProps的函数，以显示为标题。设置为null隐藏标题
-      headerTitle: "首页", // 设置标题
+      headerTitle: "搜索"
     }
   },
   Setting: {
     screen: Setting,
     navigationOptions: {
-      header: <View><Text>设置</Text></View>
+      headerTitle: "设置"
     }
   },
   Test: {
     screen: Test,
   }
-},
-  {
-    initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: 'green',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
+}, topBarOption);
 
+// 我的
+const AppNavigator_3 = createStackNavigator({
+  Me: {
+    screen: Me,
+    navigationOptions: {
+      headerTitle: "个人中心"
     }
   }
-);
-
+}, topBarOption);
 
 const TabNavigator = createBottomTabNavigator(
   {
-    Main: {
-      screen: AppNavigator,
+    BarRack: {
+      screen: AppNavigator_1,
       navigationOptions: ({ navigation }) => {
-        console.log('xxxxxxxxx', navigation)
         return {
-          tabBarLabel: '主页面',
+          headerTitle: "设置",
+          tabBarLabel: '书架',
           tabBarIcon: ({ focused }) => {
             return (
               <Image
@@ -82,12 +132,32 @@ const TabNavigator = createBottomTabNavigator(
         }
       }
     },
-    Test: {
-      screen: Test,
+    BarMain: {
+      screen: AppNavigator_2,
       navigationOptions: ({ navigation }) => {
-        console.log('yyyyyyyyy', navigation)
+        console.log('2', navigation)
         return {
-          tabBarLabel: '测试页面',
+          tabBarLabel: '悦读',
+          tabBarIcon: ({ focused }) => {
+            return (
+              <Image
+                style={{ width: 30, height: 30 }}
+                source={
+                  focused
+                    ? require('./src/assets/img/ic_home_entertainment_p.png')
+                    : require('./src/assets/img/ic_home_entertainment_n.png')
+                }
+              />
+            )
+          }
+        }
+      }
+    },
+    BarMe: {
+      screen: AppNavigator_3,
+      navigationOptions: ({ navigation }) => {
+        return {
+          tabBarLabel: '我的',
           tabBarIcon: ({ focused }) => {
             return (
               <Image
@@ -103,39 +173,32 @@ const TabNavigator = createBottomTabNavigator(
         }
       }
     }
-  }
+  }, {
+  initialRouteName: 'BarMain'
+}
 );
 const AppContainer = createAppContainer(TabNavigator);
 
-// Dimensions 用于获取设备宽、高、分辨率
-const { width, height } = Dimensions.get("window");
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  webView: {
-    width: width,
-    height: height
-  }
-});
+
 
 class App extends React.Component {
   componentDidMount() {
+    //设置状态栏透明
+    StatusBar.setTranslucent(true);
+    StatusBar.setBarStyle('light-content');
+    StatusBar.setBackgroundColor('rgba(0,0,0,0.1)');
     setTimeout(() => {
       SplashScreen.hide();
     }, 1000);
   }
   render() {
     return (
-      // <AppContainer />
       <View style={styles.container}>
-
-        <WebView
+        <AppContainer />
+        {/* <WebView
           style={styles.webView}
           source={{ uri: "http://h5.tuibook.com" }}
-        />
+        /> */}
       </View>
     )
   }
