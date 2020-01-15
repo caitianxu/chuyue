@@ -75,9 +75,13 @@ const AppNavigator_2 = createStackNavigator({
     navigationOptions: ({ navigation }) => {
       return {
         headerTitle: '微悦读',
-        headerRight: <View><Icons name='md-search' style={styles.headerSearch} size={25} color='white' onPress={(e) => {
-          navigation.navigate('Search');
-        }}></Icons></View>
+        headerRight: () => {
+          return <View>
+            <Icons name='md-search' style={styles.headerSearch} size={25} color='white' onPress={(e) => {
+              navigation.navigate('Search');
+            }}></Icons>
+          </View>
+        }
       }
     }
   },
@@ -111,18 +115,10 @@ const TabNavigator = createBottomTabNavigator(
       screen: AppNavigator_1,
       navigationOptions: ({ navigation }) => {
         return {
-          headerTitle: "设置",
           tabBarLabel: '书架',
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                style={{ width: 30, height: 30 }}
-                source={
-                  focused
-                    ? require('./src/assets/img/ic_home_home_p.png')
-                    : require('./src/assets/img/ic_home_home_n.png')
-                }
-              />
+              <Icons name='logo-buffer' size={25} color={focused ? '#286fd9' : '#aaaaaa'} />
             )
           }
         }
@@ -136,14 +132,15 @@ const TabNavigator = createBottomTabNavigator(
           tabBarLabel: '悦读',
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                style={{ width: 30, height: 30 }}
-                source={
-                  focused
-                    ? require('./src/assets/img/ic_home_entertainment_p.png')
-                    : require('./src/assets/img/ic_home_entertainment_n.png')
-                }
-              />
+              // <Image
+              //   style={{ width: 30, height: 30 }}
+              //   source={
+              //     focused
+              //       ? require('./src/assets/img/ic_home_entertainment_p.png')
+              //       : require('./src/assets/img/ic_home_entertainment_n.png')
+              //   }
+              // />
+              <Icons name='ios-bonfire' size={30} color={focused ? '#286fd9' : '#aaaaaa'} />
             )
           }
         }
@@ -156,14 +153,7 @@ const TabNavigator = createBottomTabNavigator(
           tabBarLabel: '我的',
           tabBarIcon: ({ focused }) => {
             return (
-              <Image
-                style={{ width: 30, height: 30 }}
-                source={
-                  focused
-                    ? require('./src/assets/img/ic_home_entertainment_p.png')
-                    : require('./src/assets/img/ic_home_entertainment_n.png')
-                }
-              />
+              <Icons name='ios-contact' size={25} color={focused ? '#286fd9' : '#aaaaaa'} />
             )
           }
         }
