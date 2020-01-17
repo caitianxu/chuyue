@@ -16,7 +16,8 @@ const navigatorRack = createStackNavigator({
   BookRack: {
     screen: BookRack,
     navigationOptions: {
-      headerTitle: '我的书架',
+      // headerTitle: '我的书架',
+      headerTitle: 'Title1',
     },
   },
 });
@@ -26,7 +27,8 @@ const navigatorHome = createStackNavigator({
     screen: Index,
     navigationOptions: ({navigation}) => {
       return {
-        headerTitle: '微悦读',
+        // headerTitle: '微悦读',
+        headerTitle: '带带电竞',
         headerRight: () => {
           return (
             <View>
@@ -37,7 +39,8 @@ const navigatorHome = createStackNavigator({
                 color="#999"
                 onPress={e => {
                   navigation.navigate('Search');
-                }}></Icons>
+                }}
+              />
             </View>
           );
         },
@@ -74,13 +77,14 @@ const TabNavigator = createBottomTabNavigator(
       screen: navigatorRack,
       navigationOptions: ({navigation}) => {
         return {
-          tabBarLabel: '书架',
+          // tabBarLabel: '书架',
+          tabBarLabel: '直播大厅',
           tabBarIcon: ({focused}) => {
             return (
               <Icons
                 name="logo-buffer"
                 size={25}
-                color={focused ? '#286fd9' : '#aaaaaa'}
+                color={focused ? '#ff8c00' : '#aaaaaa'}
               />
             );
           },
@@ -91,13 +95,14 @@ const TabNavigator = createBottomTabNavigator(
       screen: navigatorHome,
       navigationOptions: ({navigation}) => {
         return {
-          tabBarLabel: '悦读',
+          // tabBarLabel: '悦读',
+          tabBarLabel: '首页',
           tabBarIcon: ({focused}) => {
             return (
               <Icons
                 name="ios-bonfire"
                 size={30}
-                color={focused ? '#286fd9' : '#aaaaaa'}
+                color={focused ? '#ff8c00' : '#aaaaaa'}
               />
             );
           },
@@ -114,7 +119,7 @@ const TabNavigator = createBottomTabNavigator(
               <Icons
                 name="ios-contact"
                 size={25}
-                color={focused ? '#286fd9' : '#aaaaaa'}
+                color={focused ? '#ff8c00' : '#aaaaaa'}
               />
             );
           },
@@ -124,6 +129,10 @@ const TabNavigator = createBottomTabNavigator(
   },
   {
     initialRouteName: 'BarMain',
+    tabBarOptions: {
+      inactiveTintColor: '#aaaaaa',
+      activeTintColor: '#ff8c00',
+    },
   },
 );
 

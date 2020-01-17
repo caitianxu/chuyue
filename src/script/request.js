@@ -5,8 +5,13 @@ const ctxPath = 'http://www.tuibook.com';
 const HTTP = {
   get: (url, params) => {
     if (!params) params = {};
+    let newUrl = url;
+    if (url.indexOf('http://') == -1 && url.indexOf('https://') == -1) {
+      newUrl = `${ctxPath}${url}`;
+    }
+    newUrl = newUrl + '?' + qs.stringify(params);
     return new Promise((resolve, reject) => {
-      fetch(`${ctxPath}${url}?${qs.stringify(params)}`, {
+      fetch(newUrl, {
         method: 'GET',
       })
         .then(response => {
@@ -40,8 +45,12 @@ const HTTP = {
       org_id,
       ...params,
     };
+    let newUrl = url;
+    if (url.indexOf('http://') == -1 && url.indexOf('https://') == -1) {
+      newUrl = `${ctxPath}${url}`;
+    }
     return new Promise((resolve, reject) => {
-      fetch(`${ctxPath}${url}`, {
+      fetch(newUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',

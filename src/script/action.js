@@ -5,7 +5,7 @@ import HTTP from './request';
 //获取缓存
 export const _getCookie = key => {
   return new Promise(function(resolve, reject) {
-    AsyncStorage.getItem('memberInfo', (err, result) => {
+    AsyncStorage.getItem(key, (err, result) => {
       if (!err && result) {
         resolve(JSON.parse(result));
       } else {
