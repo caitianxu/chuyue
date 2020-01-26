@@ -9,14 +9,20 @@ const Util = {
       return `http://www.tuibook.com${url}`;
     }
   },
-  transImgUrl1: url => {
-    if (!url || url.trim() === '') {
-      return '/assets/icon-user.png';
-    } else if (url.indexOf('http') !== -1 || url.indexOf('https') !== -1) {
-      return url;
-    } else {
-      return `https://img-play.daidaidj.com/img/${url}`;
+  //时间计算
+  formatTime(second) {
+    let h = 0,
+      i = 0,
+      s = parseInt(second);
+    if (s > 60) {
+      i = parseInt(s / 60);
+      s = parseInt(s % 60);
     }
+    // 补零
+    let zero = function(v) {
+      return v >> 0 < 10 ? '0' + v : v;
+    };
+    return [zero(h), zero(i), zero(s)].join(':');
   },
 };
 export default Util;

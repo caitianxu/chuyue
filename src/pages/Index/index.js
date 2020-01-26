@@ -7,17 +7,22 @@ import {
   SafeAreaView,
   ScrollView,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import Icons from 'react-native-vector-icons/AntDesign';
 import store from '../../script/store';
 import HTTP from '../../script/request';
-import {_member_login, _getCookie, _setCookie} from '../../script/action';
+import {
+  _member_login,
+  _getCookie,
+  _setCookie,
+  _set_full_screen,
+  _set_video_uri,
+} from '../../script/action';
 import Util from '../../script/util';
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 const ImageWH = (width - 40) / 3; //图书
 const ImageVH = (width - 30) / 2; //图书
 const styles = StyleSheet.create({
@@ -133,27 +138,9 @@ export default class Page extends React.Component {
     super(props);
     this.state = {
       base: store.getState(),
-      banner: [
-        {
-          href:
-            'https://vodpub1.v.news.cn/original/20191231/b0f9a8e644dc47df93649077ee11373c.mp4',
-          pic: require('./img/b01.jpg'),
-        },
-        {
-          href:
-            'https://vodpub1.v.news.cn/original/20191231/b0f9a8e644dc47df93649077ee11373c.mp4',
-          pic: require('./img/b02.jpg'),
-        },
-        {
-          href:
-            'https://vodpub1.v.news.cn/original/20191231/b0f9a8e644dc47df93649077ee11373c.mp4',
-          pic: require('./img/b03.jpg'),
-        },
-      ],
       hotBooks: [],
       hotVideos: [],
       hotAudios: [],
-      hotPeiPeis: [],
     };
     store.subscribe(this.storeChange);
   }
@@ -172,33 +159,6 @@ export default class Page extends React.Component {
     //this.props.navigation.navigate('BarMe');
   }
   getMainHot = reset => {
-    _getCookie('hotPeiPeis').then(cookie => {
-      if (cookie && !reset) {
-        this.setState({
-          hotPeiPeis: cookie,
-        });
-      } else {
-        HTTP.get('https://play.daidaidj.com/web/api/god/v2/newHomeRecommend', {
-          latitude: 30.58108413,
-          longitude: 114.3162001,
-          city_code: 218,
-          register: 1,
-          type: 1,
-          page: 1,
-          size: 15,
-          source: 1,
-          channelId: 1000,
-          companyCode: 'PP_001',
-        }).then(res => {
-          if (res.code == 200 && res.data) {
-            this.setState({
-              hotPeiPeis: res.data,
-            });
-            _setCookie('hotPeiPeis', res.data);
-          }
-        });
-      }
-    });
     _getCookie('hotBooks').then(cookie => {
       if (cookie && !reset) {
         this.setState({
@@ -248,9 +208,20 @@ export default class Page extends React.Component {
       }
     });
   };
+  //播放视频
+  _playVideo = item => {
+    console.log(item);
+    _set_full_screen(true);
+    _set_video_uri(item.video_url);
+  };
+  //页面跳转
+  _goToPage = (key, param) => {
+    console.log('参数', param);
+    this.props.navigation.navigate(key, param);
+  };
   render() {
-    const {banner, hotBooks, hotVideos, hotAudios, hotPeiPeis} = this.state;
-    console.log(hotBooks, hotVideos, hotAudios, hotPeiPeis);
+    const {hotBooks, hotVideos, hotAudios} = this.state;
+    console.log(hotBooks, hotVideos, hotAudios);
     return (
       <View style={styles.safeAreaView}>
         <SafeAreaView style={styles.scrollView}>
@@ -258,25 +229,28 @@ export default class Page extends React.Component {
             <Swiper
               style={styles.swiper}
               showsButtons={false}
-              // autoplayTimeout={6}
-              // autoplay={true}
+              autoplayTimeout={10}
+              autoplay={true}
               dot={<View style={styles.weiperDot} />}
               activeDot={<View style={styles.weiperAtDot} />}>
-              {banner.map((item, index) => {
+              {hotVideos.map((item, index) => {
                 return (
                   <View key={`swiper-${index}`}>
-                    <Image
-                      source={item.pic}
-                      style={styles.bannerImg}
-                      resizeMode="cover"
-                    />
+                    <TouchableOpacity
+                      onPress={this._playVideo.bind(this, item)}>
+                      <Image
+                        source={{uri: Util.transImgUrl(item.cover_url_small)}}
+                        style={styles.bannerImg}
+                        resizeMode="cover"
+                      />
+                    </TouchableOpacity>
                   </View>
                 );
               })}
             </Swiper>
             {/* 菜单 */}
             <View style={styles.menuBar}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={this._goToPage.bind(this, 'Tuijian')}>
                 <View>
                   <Image
                     source={require('./img/m1.png')}
@@ -322,30 +296,11 @@ export default class Page extends React.Component {
                 </View>
               </TouchableOpacity>
             </View>
-            <View style={styles.flexPlan}>
-              {hotPeiPeis.map((item, index) => {
-                return (
-                  <TouchableOpacity activeOpacity={0.8} key={`daidai-${index}`}>
-                    <View style={styles.col3}>
-                      <Image
-                        style={styles.bookCover}
-                        source={{
-                          uri: Util.transImgUrl1(item.headPic),
-                        }}
-                      />
-                      <Text style={styles.bookName} numberOfLines={1}>
-                        {item.nickname}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
             {/* 最新图书 */}
             <View>
               <View style={styles.planTitle}>
                 <Text style={styles.planTitleName}>最新图书</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this._goToPage.bind(this, 'Books')}>
                   <View style={styles.planTitleMore}>
                     <Text style={styles.planTitleMoreText}>更多</Text>
                     <Icons name="doubleright" size={12} color="#999" />
@@ -376,7 +331,7 @@ export default class Page extends React.Component {
             <View>
               <View style={styles.planTitle}>
                 <Text style={styles.planTitleName}>最新视频</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this._goToPage.bind(this, 'Videos')}>
                   <View style={styles.planTitleMore}>
                     <Text style={styles.planTitleMoreText}>更多</Text>
                     <Icons name="doubleright" size={12} color="#999" />
@@ -409,7 +364,7 @@ export default class Page extends React.Component {
             <View>
               <View style={styles.planTitle}>
                 <Text style={styles.planTitleName}>最新听书</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={this._goToPage.bind(this, 'Audios')}>
                   <View style={styles.planTitleMore}>
                     <Text style={styles.planTitleMoreText}>更多</Text>
                     <Icons name="doubleright" size={12} color="#999" />

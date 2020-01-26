@@ -10,57 +10,119 @@ import Index from './Index';
 import Search from './Search';
 import Setting from './Setting';
 import Me from './Me';
+import Videos from './Videos';
+import Audios from './Audios';
+import Books from './Books';
+import Video from './Video';
+import Audio from './Audio';
+import Book from './Book';
+import Tuijian from './Tuijian';
+import VideoPlay from './VideoPlay';
 
 // 书架
 const navigatorRack = createStackNavigator({
   BookRack: {
     screen: BookRack,
     navigationOptions: {
-      // headerTitle: '我的书架',
-      headerTitle: 'Title1',
+      headerTitle: '我的书架',
     },
   },
 });
 //悦读
-const navigatorHome = createStackNavigator({
-  Home: {
-    screen: Index,
-    navigationOptions: ({navigation}) => {
-      return {
-        // headerTitle: '微悦读',
-        headerTitle: '带带电竞',
-        headerRight: () => {
-          return (
-            <View>
-              <Icons
-                name="md-search"
-                style={{paddingRight: 15, paddingLeft: 15, paddingTop: 5}}
-                size={25}
-                color="#999"
-                onPress={e => {
-                  navigation.navigate('Search');
-                }}
-              />
-            </View>
-          );
-        },
-      };
+const navigatorHome = createStackNavigator(
+  {
+    Home: {
+      screen: Index,
+      navigationOptions: ({navigation}) => {
+        return {
+          headerTitle: '微悦读',
+          headerTintColor: '#fd6655',
+          headerRight: () => {
+            return (
+              <View>
+                <Icons
+                  name="md-search"
+                  style={{paddingRight: 15, paddingLeft: 15, paddingTop: 5}}
+                  size={25}
+                  color="#999"
+                  onPress={e => {
+                    navigation.navigate('Search');
+                  }}
+                />
+              </View>
+            );
+          },
+        };
+      },
+    },
+    Search: {
+      screen: Search,
+      navigationOptions: {
+        headerTitle: '搜索',
+      },
+    },
+    Setting: {
+      screen: Setting,
+      navigationOptions: {
+        headerTitle: '设置',
+      },
+    },
+    Videos: {
+      screen: Videos,
+      navigationOptions: {
+        headerTitle: '视频',
+      },
+    },
+    Audios: {
+      screen: Audios,
+      navigationOptions: {
+        headerTitle: '听书',
+      },
+    },
+    Books: {
+      screen: Books,
+      navigationOptions: {
+        headerTitle: '图书',
+      },
+    },
+    Video: {
+      screen: Video,
+      navigationOptions: {
+        headerTitle: '视频详情',
+      },
+    },
+    Audio: {
+      screen: Audio,
+      navigationOptions: {
+        headerTitle: '听书详情',
+      },
+    },
+    Book: {
+      screen: Book,
+      navigationOptions: {
+        headerTitle: '图书详情',
+      },
+    },
+    Tuijian: {
+      screen: Tuijian,
+      navigationOptions: {
+        headerTitle: '好书推荐',
+      },
+    },
+    VideoPlay: {
+      screen: VideoPlay,
+      navigationOptions: ({navigation}) => ({
+        header: null,
+      }),
     },
   },
-  Search: {
-    screen: Search,
-    navigationOptions: {
-      headerTitle: '搜索',
-    },
+  {
+    // 设置二级页面隐藏tabBar
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible: navigation.state.index > 0 ? false : true,
+    }),
   },
-  Setting: {
-    screen: Setting,
-    navigationOptions: {
-      headerTitle: '设置',
-    },
-  },
-});
-
+);
 // 我的
 const navigatorMe = createStackNavigator({
   Me: {
@@ -77,8 +139,7 @@ const TabNavigator = createBottomTabNavigator(
       screen: navigatorRack,
       navigationOptions: ({navigation}) => {
         return {
-          // tabBarLabel: '书架',
-          tabBarLabel: '直播大厅',
+          tabBarLabel: '书架',
           tabBarIcon: ({focused}) => {
             return (
               <Icons
@@ -95,8 +156,7 @@ const TabNavigator = createBottomTabNavigator(
       screen: navigatorHome,
       navigationOptions: ({navigation}) => {
         return {
-          // tabBarLabel: '悦读',
-          tabBarLabel: '首页',
+          tabBarLabel: '悦读',
           tabBarIcon: ({focused}) => {
             return (
               <Icons
