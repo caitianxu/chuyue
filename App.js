@@ -1,5 +1,13 @@
 import React from 'react';
-import {Dimensions, Platform, View, StatusBar, StyleSheet} from 'react-native';
+import {
+  Dimensions,
+  Platform,
+  View,
+  StatusBar,
+  StyleSheet,
+  ActivityIndicator,
+  Text,
+} from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import AppContainer from './src/pages/AppContainer';
 import store from './src/script/store';
@@ -57,13 +65,16 @@ class App extends React.Component {
   }
   render() {
     console.log(this.state.base);
-    const {fullScreen, videoUri} = this.state.base;
+    const {loading} = this.state.base;
     return (
       <View style={{flex: 1}}>
         <AppContainer />
-        {fullScreen ? (
-          <View style={styles.fullScreen}>
-            <Video uri={videoUri} />
+        {loading ? (
+          <View style={styles.loading}>
+            <View style={styles.loadingBg}>
+              <ActivityIndicator size="large" color="#ffffff" />
+              <Text style={styles.loadingText}>加载中</Text>
+            </View>
           </View>
         ) : null}
       </View>
@@ -71,14 +82,28 @@ class App extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  fullScreen: {
+  loading: {
     position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
     right: 0,
-    zIndex: 1000,
-    backgroundColor: '#000000',
+    zIndex: 1001,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingBg: {
+    backgroundColor: 'rgba(0,0,0,0.65)',
+    width: 120,
+    paddingTop: 20,
+    paddingBottom: 20,
+    borderRadius: 10
+  },
+  loadingText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 12,
+    paddingTop: 10
   },
 });
 export default App;

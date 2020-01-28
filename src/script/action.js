@@ -1,7 +1,6 @@
 import store from './store';
 import HTTP from './request';
 import AsyncStorage from '@react-native-community/async-storage';
-import {StatusBar} from 'react-native';
 
 //获取缓存
 export const _getCookie = key => {
@@ -42,29 +41,12 @@ export const _set_client_info = param => {
   });
 };
 
-//全屏开启和隐藏
-export const _set_full_screen = bool => {
+//开启 关闭 加载
+export const _set_public_loading = bool => {
   return new Promise(function(resolve, reject) {
     const action = {
-      type: 'set_full_screen',
+      type: 'set_public_loading',
       data: bool,
-    };
-    store.dispatch(action);
-    if (bool) {
-      StatusBar.setHidden(true);
-    } else {
-      StatusBar.setHidden(false);
-    }
-    resolve();
-  });
-};
-
-//设置视频地址
-export const _set_video_uri = uri => {
-  return new Promise(function(resolve, reject) {
-    const action = {
-      type: 'set_video_uri',
-      data: uri,
     };
     store.dispatch(action);
     resolve();

@@ -17,8 +17,7 @@ import {
   _member_login,
   _getCookie,
   _setCookie,
-  _set_full_screen,
-  _set_video_uri,
+  _set_public_loading,
 } from '../../script/action';
 import Util from '../../script/util';
 
@@ -149,15 +148,15 @@ export default class Page extends React.Component {
       base: store.getState(),
     });
   };
+  componentDidMount() {
+    this.getMainHot();
+  }
   componentWillUnmount() {
     this.setState = () => {
       return;
     };
   }
-  componentDidMount() {
-    this.getMainHot();
-    //this.props.navigation.navigate('BarMe');
-  }
+  //获取热门数据
   getMainHot = reset => {
     _getCookie('hotBooks').then(cookie => {
       if (cookie && !reset) {
@@ -208,15 +207,8 @@ export default class Page extends React.Component {
       }
     });
   };
-  //播放视频
-  _playVideo = item => {
-    console.log(item);
-    _set_full_screen(true);
-    _set_video_uri(item.video_url);
-  };
   //页面跳转
   _goToPage = (key, param) => {
-    console.log('参数', param);
     this.props.navigation.navigate(key, param);
   };
   render() {
@@ -237,7 +229,9 @@ export default class Page extends React.Component {
                 return (
                   <View key={`swiper-${index}`}>
                     <TouchableOpacity
-                      onPress={this._playVideo.bind(this, item)}>
+                      onPress={this._goToPage.bind(this, 'VideoPlay', {
+                        uri: item.video_url,
+                      })}>
                       <Image
                         source={{uri: Util.transImgUrl(item.cover_url_small)}}
                         style={styles.bannerImg}
@@ -250,7 +244,8 @@ export default class Page extends React.Component {
             </Swiper>
             {/* 菜单 */}
             <View style={styles.menuBar}>
-              <TouchableOpacity onPress={this._goToPage.bind(this, 'Tuijian')}>
+              <TouchableOpacity
+                onPress={this._goToPage.bind(this, 'Tuijian', null)}>
                 <View>
                   <Image
                     source={require('./img/m1.png')}
@@ -259,7 +254,8 @@ export default class Page extends React.Component {
                   <Text style={styles.menuItemText}>推荐</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={this._goToPage.bind(this, 'Books', null)}>
                 <View>
                   <Image
                     source={require('./img/m2.png')}
@@ -268,7 +264,8 @@ export default class Page extends React.Component {
                   <Text style={styles.menuItemText}>图书</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={this._goToPage.bind(this, 'Audios', null)}>
                 <View>
                   <Image
                     source={require('./img/m3.png')}
@@ -277,7 +274,8 @@ export default class Page extends React.Component {
                   <Text style={styles.menuItemText}>听书</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={this._goToPage.bind(this, 'Videos', null)}>
                 <View>
                   <Image
                     source={require('./img/m4.png')}
@@ -286,7 +284,8 @@ export default class Page extends React.Component {
                   <Text style={styles.menuItemText}>视频</Text>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={this._goToPage.bind(this, 'News', null)}>
                 <View>
                   <Image
                     source={require('./img/m5.png')}
@@ -300,7 +299,8 @@ export default class Page extends React.Component {
             <View>
               <View style={styles.planTitle}>
                 <Text style={styles.planTitleName}>最新图书</Text>
-                <TouchableOpacity onPress={this._goToPage.bind(this, 'Books')}>
+                <TouchableOpacity
+                  onPress={this._goToPage.bind(this, 'Books', null)}>
                   <View style={styles.planTitleMore}>
                     <Text style={styles.planTitleMoreText}>更多</Text>
                     <Icons name="doubleright" size={12} color="#999" />
@@ -310,7 +310,13 @@ export default class Page extends React.Component {
               <View style={styles.flexPlan}>
                 {hotBooks.map((item, index) => {
                   return (
-                    <TouchableOpacity activeOpacity={0.8} key={`book-${index}`}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      key={`book-${index}`}
+                      onPress={this._goToPage.bind(this, 'Book', {
+                        id: item.book_id,
+                        name: item.book_name,
+                      })}>
                       <View style={styles.col3}>
                         <Image
                           style={styles.bookCover}
@@ -331,7 +337,8 @@ export default class Page extends React.Component {
             <View>
               <View style={styles.planTitle}>
                 <Text style={styles.planTitleName}>最新视频</Text>
-                <TouchableOpacity onPress={this._goToPage.bind(this, 'Videos')}>
+                <TouchableOpacity
+                  onPress={this._goToPage.bind(this, 'Videos', null)}>
                   <View style={styles.planTitleMore}>
                     <Text style={styles.planTitleMoreText}>更多</Text>
                     <Icons name="doubleright" size={12} color="#999" />
@@ -343,7 +350,11 @@ export default class Page extends React.Component {
                   return (
                     <TouchableOpacity
                       activeOpacity={0.8}
-                      key={`audio-${index}`}>
+                      key={`audio-${index}`}
+                      onPress={this._goToPage.bind(this, 'Video', {
+                        id: item.video_id,
+                        name: item.video_title,
+                      })}>
                       <View style={styles.col2}>
                         <Image
                           style={styles.videoCover}
@@ -364,7 +375,8 @@ export default class Page extends React.Component {
             <View>
               <View style={styles.planTitle}>
                 <Text style={styles.planTitleName}>最新听书</Text>
-                <TouchableOpacity onPress={this._goToPage.bind(this, 'Audios')}>
+                <TouchableOpacity
+                  onPress={this._goToPage.bind(this, 'Audios', null)}>
                   <View style={styles.planTitleMore}>
                     <Text style={styles.planTitleMoreText}>更多</Text>
                     <Icons name="doubleright" size={12} color="#999" />
@@ -376,7 +388,11 @@ export default class Page extends React.Component {
                   return (
                     <TouchableOpacity
                       activeOpacity={0.8}
-                      key={`audio-${index}`}>
+                      key={`audio-${index}`}
+                      onPress={this._goToPage.bind(this, 'Audio', {
+                        id: item.audio_id,
+                        name: item.audio_title,
+                      })}>
                       <View style={styles.col3}>
                         <Image
                           style={styles.bookCover}

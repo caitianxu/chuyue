@@ -6,8 +6,7 @@ const defaultState = {
   token_type: 'android',
   client_type: 'QY',
   client: {},
-  fullScreen: false, //是否组建全屏
-  videoUri: null, //视频地址
+  loading: false,
 };
 
 export default (state = defaultState, action) => {
@@ -22,12 +21,8 @@ export default (state = defaultState, action) => {
       newState.member_token = newState.member.token;
       newState.org_id = newState.member.org_id;
       break;
-    case 'set_full_screen':
-      newState.fullScreen = action.data;
-      newState.videoUri = null;
-      break;
-    case 'set_video_uri':
-      newState.videoUri = action.data;
+    case 'set_public_loading':
+      newState.loading = action.data;
       break;
     default:
       break;

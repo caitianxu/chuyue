@@ -18,6 +18,10 @@ const Util = {
       i = parseInt(s / 60);
       s = parseInt(s % 60);
     }
+    if(i > 60){
+      h = parseInt(i / 60);
+      i = parseInt(i % 60);
+    }
     // 补零
     let zero = function(v) {
       return v >> 0 < 10 ? '0' + v : v;

@@ -2,7 +2,7 @@ import React from 'react';
 import {createAppContainer} from 'react-navigation';
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 import {createStackNavigator} from 'react-navigation-stack';
-import {View} from 'react-native';
+import {View, Image} from 'react-native';
 import Icons from 'react-native-vector-icons/Ionicons';
 
 import BookRack from './BookRack';
@@ -18,7 +18,23 @@ import Audio from './Audio';
 import Book from './Book';
 import Tuijian from './Tuijian';
 import VideoPlay from './VideoPlay';
+import News from './News';
 
+const headerRight = navigation => {
+  return (
+    <View>
+      <Icons
+        name="md-search"
+        style={{paddingRight: 15, paddingLeft: 15, paddingTop: 5}}
+        size={25}
+        color="#999"
+        onPress={e => {
+          navigation.navigate('Search');
+        }}
+      />
+    </View>
+  );
+};
 // 书架
 const navigatorRack = createStackNavigator({
   BookRack: {
@@ -37,21 +53,7 @@ const navigatorHome = createStackNavigator(
         return {
           headerTitle: '微悦读',
           headerTintColor: '#fd6655',
-          headerRight: () => {
-            return (
-              <View>
-                <Icons
-                  name="md-search"
-                  style={{paddingRight: 15, paddingLeft: 15, paddingTop: 5}}
-                  size={25}
-                  color="#999"
-                  onPress={e => {
-                    navigation.navigate('Search');
-                  }}
-                />
-              </View>
-            );
-          },
+          headerRight: headerRight.bind(this, navigation),
         };
       },
     },
@@ -69,48 +71,91 @@ const navigatorHome = createStackNavigator(
     },
     Videos: {
       screen: Videos,
-      navigationOptions: {
-        headerTitle: '视频',
+      navigationOptions: ({navigation}) => {
+        return {
+          headerTitle: '视频',
+          headerTintColor: '#fd6655',
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     Audios: {
       screen: Audios,
-      navigationOptions: {
-        headerTitle: '听书',
+      navigationOptions: ({navigation}) => {
+        return {
+          headerTitle: '听书',
+          headerTintColor: '#fd6655',
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     Books: {
       screen: Books,
-      navigationOptions: {
-        headerTitle: '图书',
+      navigationOptions: ({navigation}) => {
+        return {
+          headerTitle: '图书',
+          headerTintColor: '#fd6655',
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     Video: {
       screen: Video,
-      navigationOptions: {
-        headerTitle: '视频详情',
+      navigationOptions: ({navigation}) => {
+        let str = navigation.state.params.name;
+        if (str.length > 10) {
+          str = str.substr(0, 12) + '...';
+        }
+        return {
+          headerTitle: str,
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     Audio: {
       screen: Audio,
-      navigationOptions: {
-        headerTitle: '听书详情',
+      navigationOptions: ({navigation}) => {
+        let str = navigation.state.params.name;
+        if (str.length > 10) {
+          str = str.substr(0, 12) + '...';
+        }
+        return {
+          headerTitle: str,
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     Book: {
       screen: Book,
-      navigationOptions: {
-        headerTitle: '图书详情',
+      navigationOptions: ({navigation}) => {
+        let str = navigation.state.params.name;
+        if (str.length > 10) {
+          str = str.substr(0, 12) + '...';
+        }
+        return {
+          headerTitle: str,
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     Tuijian: {
       screen: Tuijian,
-      navigationOptions: {
-        headerTitle: '好书推荐',
+      navigationOptions: ({navigation}) => {
+        return {
+          headerTitle: '好书推荐',
+          headerTintColor: '#fd6655',
+          headerRight: headerRight.bind(this, navigation),
+        };
       },
     },
     VideoPlay: {
       screen: VideoPlay,
+      navigationOptions: ({navigation}) => ({
+        header: null,
+      }),
+    },
+    News: {
+      screen: News,
       navigationOptions: ({navigation}) => ({
         header: null,
       }),
@@ -129,6 +174,7 @@ const navigatorMe = createStackNavigator({
     screen: Me,
     navigationOptions: {
       headerTitle: '个人中心',
+      headerTintColor: '#fd6655',
     },
   },
 });
@@ -142,10 +188,13 @@ const TabNavigator = createBottomTabNavigator(
           tabBarLabel: '书架',
           tabBarIcon: ({focused}) => {
             return (
-              <Icons
-                name="logo-buffer"
-                size={25}
-                color={focused ? '#ff8c00' : '#aaaaaa'}
+              <Image
+                source={
+                  focused
+                    ? require('../assets/img/rack-at.png')
+                    : require('../assets/img/rack.png')
+                }
+                style={{width: 26, height: 26}}
               />
             );
           },
@@ -159,10 +208,13 @@ const TabNavigator = createBottomTabNavigator(
           tabBarLabel: '悦读',
           tabBarIcon: ({focused}) => {
             return (
-              <Icons
-                name="ios-bonfire"
-                size={30}
-                color={focused ? '#ff8c00' : '#aaaaaa'}
+              <Image
+                source={
+                  focused
+                    ? require('../assets/img/home-at.png')
+                    : require('../assets/img/home.png')
+                }
+                style={{width: 25, height: 25}}
               />
             );
           },
@@ -176,10 +228,13 @@ const TabNavigator = createBottomTabNavigator(
           tabBarLabel: '我的',
           tabBarIcon: ({focused}) => {
             return (
-              <Icons
-                name="ios-contact"
-                size={25}
-                color={focused ? '#ff8c00' : '#aaaaaa'}
+              <Image
+                source={
+                  focused
+                    ? require('../assets/img/me-at.png')
+                    : require('../assets/img/me.png')
+                }
+                style={{width: 26, height: 26}}
               />
             );
           },
