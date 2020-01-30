@@ -19,6 +19,8 @@ import Book from './Book';
 import Tuijian from './Tuijian';
 import VideoPlay from './VideoPlay';
 import News from './News';
+import Login from './Login';
+import Reviews from './Reviews';
 
 const headerRight = navigation => {
   return (
@@ -35,15 +37,150 @@ const headerRight = navigation => {
     </View>
   );
 };
-// 书架
-const navigatorRack = createStackNavigator({
-  BookRack: {
-    screen: BookRack,
+const publicRouter = {
+  Search: {
+    screen: Search,
     navigationOptions: {
-      headerTitle: '我的书架',
+      headerTitle: '搜索',
     },
   },
-});
+  Setting: {
+    screen: Setting,
+    navigationOptions: {
+      headerTitle: '设置',
+    },
+  },
+  Reviews: {
+    screen: Reviews,
+    navigationOptions: {
+      headerTitle: '我的评论',
+    },
+  },
+  Videos: {
+    screen: Videos,
+    navigationOptions: ({navigation}) => {
+      return {
+        headerTitle: '视频',
+        headerTintColor: '#fd6655',
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  Audios: {
+    screen: Audios,
+    navigationOptions: ({navigation}) => {
+      return {
+        headerTitle: '听书',
+        headerTintColor: '#fd6655',
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  Books: {
+    screen: Books,
+    navigationOptions: ({navigation}) => {
+      return {
+        headerTitle: '图书',
+        headerTintColor: '#fd6655',
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  Video: {
+    screen: Video,
+    navigationOptions: ({navigation}) => {
+      let str = navigation.state.params.name;
+      if (str.length > 10) {
+        str = str.substr(0, 12) + '...';
+      }
+      return {
+        headerTitle: str,
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  Audio: {
+    screen: Audio,
+    navigationOptions: ({navigation}) => {
+      let str = navigation.state.params.name;
+      if (str.length > 10) {
+        str = str.substr(0, 12) + '...';
+      }
+      return {
+        headerTitle: str,
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  Book: {
+    screen: Book,
+    navigationOptions: ({navigation}) => {
+      let str = navigation.state.params.name;
+      if (str.length > 10) {
+        str = str.substr(0, 12) + '...';
+      }
+      return {
+        headerTitle: str,
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  Tuijian: {
+    screen: Tuijian,
+    navigationOptions: ({navigation}) => {
+      return {
+        headerTitle: '好书推荐',
+        headerTintColor: '#fd6655',
+        headerRight: headerRight.bind(this, navigation),
+      };
+    },
+  },
+  VideoPlay: {
+    screen: VideoPlay,
+    navigationOptions: ({navigation}) => ({
+      headerShown: false,
+    }),
+  },
+  News: {
+    screen: News,
+    navigationOptions: ({navigation}) => ({
+      headerShown: false,
+    }),
+  },
+  Login: {
+    screen: Login,
+    navigationOptions: ({navigation}) => ({
+      headerTitle: '用户登录',
+      headerLeft: () => null,
+      headerTitleStyle: {
+        flex: 1,
+        textAlign: 'center',
+      },
+      headerTitleContainerStyle: {
+        left: 70,
+        right: 70,
+      },
+    }),
+  },
+};
+// 书架
+const navigatorRack = createStackNavigator(
+  {
+    BookRack: {
+      screen: BookRack,
+      navigationOptions: {
+        headerTitle: '我的书架',
+      },
+    },
+    ...publicRouter,
+  },
+  {
+    // 设置二级页面隐藏tabBar
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible: navigation.state.index > 0 ? false : true,
+    }),
+  },
+);
 //悦读
 const navigatorHome = createStackNavigator(
   {
@@ -57,109 +194,7 @@ const navigatorHome = createStackNavigator(
         };
       },
     },
-    Search: {
-      screen: Search,
-      navigationOptions: {
-        headerTitle: '搜索',
-      },
-    },
-    Setting: {
-      screen: Setting,
-      navigationOptions: {
-        headerTitle: '设置',
-      },
-    },
-    Videos: {
-      screen: Videos,
-      navigationOptions: ({navigation}) => {
-        return {
-          headerTitle: '视频',
-          headerTintColor: '#fd6655',
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    Audios: {
-      screen: Audios,
-      navigationOptions: ({navigation}) => {
-        return {
-          headerTitle: '听书',
-          headerTintColor: '#fd6655',
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    Books: {
-      screen: Books,
-      navigationOptions: ({navigation}) => {
-        return {
-          headerTitle: '图书',
-          headerTintColor: '#fd6655',
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    Video: {
-      screen: Video,
-      navigationOptions: ({navigation}) => {
-        let str = navigation.state.params.name;
-        if (str.length > 10) {
-          str = str.substr(0, 12) + '...';
-        }
-        return {
-          headerTitle: str,
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    Audio: {
-      screen: Audio,
-      navigationOptions: ({navigation}) => {
-        let str = navigation.state.params.name;
-        if (str.length > 10) {
-          str = str.substr(0, 12) + '...';
-        }
-        return {
-          headerTitle: str,
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    Book: {
-      screen: Book,
-      navigationOptions: ({navigation}) => {
-        let str = navigation.state.params.name;
-        if (str.length > 10) {
-          str = str.substr(0, 12) + '...';
-        }
-        return {
-          headerTitle: str,
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    Tuijian: {
-      screen: Tuijian,
-      navigationOptions: ({navigation}) => {
-        return {
-          headerTitle: '好书推荐',
-          headerTintColor: '#fd6655',
-          headerRight: headerRight.bind(this, navigation),
-        };
-      },
-    },
-    VideoPlay: {
-      screen: VideoPlay,
-      navigationOptions: ({navigation}) => ({
-        header: null,
-      }),
-    },
-    News: {
-      screen: News,
-      navigationOptions: ({navigation}) => ({
-        header: null,
-      }),
-    },
+    ...publicRouter,
   },
   {
     // 设置二级页面隐藏tabBar
@@ -169,15 +204,23 @@ const navigatorHome = createStackNavigator(
   },
 );
 // 我的
-const navigatorMe = createStackNavigator({
-  Me: {
-    screen: Me,
-    navigationOptions: {
-      headerTitle: '个人中心',
-      headerTintColor: '#fd6655',
+const navigatorMe = createStackNavigator(
+  {
+    Me: {
+      screen: Me,
+      navigationOptions: ({navigation}) => ({
+        headerShown: false,
+      }),
     },
+    ...publicRouter,
   },
-});
+  {
+    // 设置二级页面隐藏tabBar
+    navigationOptions: ({navigation}) => ({
+      tabBarVisible: navigation.state.index > 0 ? false : true,
+    }),
+  },
+);
 
 const TabNavigator = createBottomTabNavigator(
   {

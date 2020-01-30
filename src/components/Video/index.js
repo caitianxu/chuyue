@@ -8,7 +8,7 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    console.log(1223);
+
   }
   render() {
     return (

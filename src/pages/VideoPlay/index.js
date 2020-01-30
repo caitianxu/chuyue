@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  Slider,
   StatusBar,
   StyleSheet,
   ActivityIndicator,
@@ -11,6 +10,7 @@ import {
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import Slider from '@react-native-community/slider';
 import Util from '../../script/util';
 
 class Page extends React.Component {

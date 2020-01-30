@@ -13,12 +13,7 @@ import Swiper from 'react-native-swiper';
 import Icons from 'react-native-vector-icons/AntDesign';
 import store from '../../script/store';
 import HTTP from '../../script/request';
-import {
-  _member_login,
-  _getCookie,
-  _setCookie,
-  _set_public_loading,
-} from '../../script/action';
+import {_getCookie, _setCookie} from '../../script/action';
 import Util from '../../script/util';
 
 const {width, height} = Dimensions.get('window');
@@ -213,7 +208,6 @@ export default class Page extends React.Component {
   };
   render() {
     const {hotBooks, hotVideos, hotAudios} = this.state;
-    console.log(hotBooks, hotVideos, hotAudios);
     return (
       <View style={styles.safeAreaView}>
         <SafeAreaView style={styles.scrollView}>

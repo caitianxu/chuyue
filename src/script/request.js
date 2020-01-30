@@ -49,11 +49,12 @@ const HTTP = {
     if (url.indexOf('http://') == -1 && url.indexOf('https://') == -1) {
       newUrl = `${ctxPath}${url}`;
     }
+    console.log('参数:', newParam)
     return new Promise((resolve, reject) => {
       fetch(newUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         },
         body: qs.stringify(newParam),
       })

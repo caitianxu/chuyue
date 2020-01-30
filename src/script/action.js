@@ -30,6 +30,18 @@ export const _delCookie = key => {
 };
 
 //设备信息
+export const _clear_store_all = () => {
+  return new Promise(function(resolve, reject) {
+    AsyncStorage.clear();
+    const action = {
+      type: 'clear_store_all'
+    };
+    store.dispatch(action);
+    resolve();
+  });
+};
+
+//设备信息
 export const _set_client_info = param => {
   return new Promise(function(resolve, reject) {
     const action = {
@@ -69,5 +81,20 @@ export const _member_login = (param, callback) => {
       _delCookie('memberInfo');
     }
     callback && callback();
+  });
+};
+
+//用户资料变更
+export const _change_member_info = (param, data) => {
+  return new Promise(function(resolve, reject) {
+    const {org_id, token, token_type} = data;
+    let newParam = {...param, org_id, token, token_type};
+    _setCookie('memberInfo', newParam);
+    const action = {
+      type: 'set_member_info',
+      data: {...data},
+    };
+    store.dispatch(action);
+    resolve();
   });
 };

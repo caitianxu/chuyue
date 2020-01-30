@@ -3,15 +3,14 @@ import {
   Dimensions,
   Platform,
   View,
+  Text,
   StatusBar,
   StyleSheet,
   ActivityIndicator,
-  Text,
 } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 import AppContainer from './src/pages/AppContainer';
 import store from './src/script/store';
-import Video from './src/components/Video';
 import {_set_client_info, _getCookie, _member_login} from './src/script/action';
 
 class App extends React.Component {
@@ -28,6 +27,7 @@ class App extends React.Component {
       base: store.getState(),
     });
   };
+
   componentWillUnmount() {
     this.setState = () => {
       return;
@@ -35,9 +35,7 @@ class App extends React.Component {
   }
   componentDidMount() {
     _getCookie('memberInfo').then(res => {
-      if (res) {
-        _member_login(res);
-      }
+      if (res) _member_login(res);
     });
     //android
     if (Platform.OS == 'android') {
@@ -97,13 +95,13 @@ const styles = StyleSheet.create({
     width: 120,
     paddingTop: 20,
     paddingBottom: 20,
-    borderRadius: 10
+    borderRadius: 10,
   },
   loadingText: {
     color: '#fff',
     textAlign: 'center',
     fontSize: 12,
-    paddingTop: 10
+    paddingTop: 10,
   },
 });
 export default App;
