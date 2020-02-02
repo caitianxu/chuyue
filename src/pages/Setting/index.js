@@ -5,7 +5,6 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   TextInput,
   Picker,
   ToastAndroid,
@@ -14,11 +13,7 @@ import store from '../../script/store';
 import Util from '../../script/util';
 import Icons from 'react-native-vector-icons/AntDesign';
 import ImagePicker from 'react-native-image-crop-picker';
-import {
-  _clear_store_all,
-  _set_public_loading,
-  _update_member_info,
-} from '../../script/action';
+import {_set_public_loading, _update_member_info} from '../../script/action';
 import HTTP from '../../script/request';
 
 const styles = StyleSheet.create({
@@ -63,7 +58,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 100,
     marginBottom: 30,
-    backgroundColor: '#e94f4f',
+    backgroundColor: '#fd6655',
     borderRadius: 5,
     marginLeft: 50,
     marginRight: 65,
@@ -179,20 +174,6 @@ class Page extends React.Component {
       return;
     };
   }
-  //注销
-  _loginup = () => {
-    Alert.alert('提示', '你确定退出登录吗?', [
-      {text: '取消'},
-      {
-        text: '确定',
-        onPress: () => {
-          _clear_store_all().then(() => {
-            this.props.navigation.navigate('Home');
-          });
-        },
-      },
-    ]);
-  };
   //选择图片
   _showPicker = () => {
     ImagePicker.openPicker({
@@ -220,19 +201,6 @@ class Page extends React.Component {
   static navigationOptions = ({navigation}) => {
     return {
       headerTitle: '设置',
-      headerRight: () => {
-        return (
-          <TouchableOpacity onPress={_that._loginup}>
-            <Text
-              style={{
-                paddingRight: 20,
-                paddingLeft: 10,
-              }}>
-              注销
-            </Text>
-          </TouchableOpacity>
-        );
-      },
     };
   };
   render() {

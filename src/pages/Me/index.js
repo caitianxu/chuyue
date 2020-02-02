@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   Image,
+  Alert,
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
@@ -12,6 +13,7 @@ import Util from '../../script/util';
 import Icons from 'react-native-vector-icons/AntDesign';
 import {withNavigationFocus} from 'react-navigation';
 import HTTP from '../../script/request';
+import {_clear_store_all} from '../../script/action';
 
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -94,6 +96,20 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     paddingTop: 15,
   },
+  button: {
+    marginTop: 50,
+    marginBottom: 30,
+    backgroundColor: '#fd6655',
+    borderRadius: 5,
+    marginLeft: 100,
+    marginRight: 100,
+  },
+  buttonText: {
+    color: '#fff',
+    textAlign: 'center',
+    padding: 10,
+    fontSize: 16,
+  },
 });
 class Page extends React.Component {
   constructor(props) {
@@ -130,6 +146,20 @@ class Page extends React.Component {
       return false;
     }
     return true;
+  };
+  //注销
+  _loginup = () => {
+    Alert.alert('提示', '你确定退出登录吗?', [
+      {text: '取消'},
+      {
+        text: '确定',
+        onPress: () => {
+          _clear_store_all().then(() => {
+            this.props.navigation.navigate('Home');
+          });
+        },
+      },
+    ]);
   };
   render() {
     const {member, todayTime, allTime, reviewNum, rank} = this.state.base;
@@ -270,6 +300,12 @@ class Page extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+
+        <TouchableOpacity activeOpacity={0.7} onPress={this._loginup}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>注销</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }

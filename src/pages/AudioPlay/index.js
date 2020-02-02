@@ -142,7 +142,6 @@ class Page extends React.Component {
     this.mySound = new Sound(this.state.audio.audio_url, null, error => {
       _set_public_loading(false);
       if (error) {
-        console.log('failed to load the sound', error);
         return;
       }
       this.setState(

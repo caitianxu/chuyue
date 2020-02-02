@@ -66,7 +66,6 @@ class Page extends React.Component {
   };
   //获取内容
   _getPageData = i => {
-    console.log('获取数据', i);
     if (i == 1) {
       this.getAudioData();
     } else if (i == 2) {
@@ -175,7 +174,6 @@ class Page extends React.Component {
   };
   render() {
     const {books, videos, audios} = this.state;
-    console.log(books, videos, audios);
     return (
       <ScrollableTabView
         ref={el => (this.myTabView = el)}
@@ -264,7 +262,7 @@ class Page extends React.Component {
                     activeOpacity={0.8}
                     key={`audio-${index}`}
                     onLongPress={this._changeEdit}
-                    onPress={this._goToPage.bind(this, 'Audio', {...item})}>
+                    onPress={this._goToPage.bind(this, 'AudioPlay', {...item})}>
                     <View style={styles.col3}>
                       <Image
                         style={styles.bookCover}
@@ -316,7 +314,10 @@ class Page extends React.Component {
                     activeOpacity={0.8}
                     key={`audio-${index}`}
                     onLongPress={this._changeEdit}
-                    onPress={this._goToPage.bind(this, 'Video', {...item})}>
+                    onPress={this._goToPage.bind(this, 'VideoPlay', {
+                      title: item.video_title,
+                      uri: item.video_url,
+                    })}>
                     <View style={styles.col2}>
                       <Image
                         style={styles.videoCover}

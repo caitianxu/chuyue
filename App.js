@@ -62,7 +62,6 @@ class App extends React.Component {
     }, 1000);
   }
   render() {
-    console.log(this.state.base);
     const {loading} = this.state.base;
     return (
       <View style={{flex: 1}}>
