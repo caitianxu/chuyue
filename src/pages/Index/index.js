@@ -223,9 +223,7 @@ export default class Page extends React.Component {
                 return (
                   <View key={`swiper-${index}`}>
                     <TouchableOpacity
-                      onPress={this._goToPage.bind(this, 'VideoPlay', {
-                        uri: item.video_url,
-                      })}>
+                      onPress={this._goToPage.bind(this, 'Video', {...item})}>
                       <Image
                         source={{uri: Util.transImgUrl(item.cover_url_small)}}
                         style={styles.bannerImg}
@@ -307,10 +305,7 @@ export default class Page extends React.Component {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       key={`book-${index}`}
-                      onPress={this._goToPage.bind(this, 'Book', {
-                        id: item.book_id,
-                        name: item.book_name,
-                      })}>
+                      onPress={this._goToPage.bind(this, 'Book', {...item})}>
                       <View style={styles.col3}>
                         <Image
                           style={styles.bookCover}
@@ -345,10 +340,7 @@ export default class Page extends React.Component {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       key={`audio-${index}`}
-                      onPress={this._goToPage.bind(this, 'Video', {
-                        id: item.video_id,
-                        name: item.video_title,
-                      })}>
+                      onPress={this._goToPage.bind(this, 'Video', {...item})}>
                       <View style={styles.col2}>
                         <Image
                           style={styles.videoCover}
@@ -383,10 +375,7 @@ export default class Page extends React.Component {
                     <TouchableOpacity
                       activeOpacity={0.8}
                       key={`audio-${index}`}
-                      onPress={this._goToPage.bind(this, 'Audio', {
-                        id: item.audio_id,
-                        name: item.audio_title,
-                      })}>
+                      onPress={this._goToPage.bind(this, 'Audio', {...item})}>
                       <View style={styles.col3}>
                         <Image
                           style={styles.bookCover}

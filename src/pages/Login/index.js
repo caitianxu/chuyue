@@ -8,10 +8,9 @@ import {
   BackHandler,
   ToastAndroid,
 } from 'react-native';
-import {StackActions, NavigationActions} from 'react-navigation';
 import store from '../../script/store';
 import HTTP from '../../script/request';
-import {_change_member_info} from '../../script/action';
+import {_change_member_info, _set_public_loading} from '../../script/action';
 
 const styles = StyleSheet.create({
   safeAreaView: {
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
   button: {
     marginTop: 30,
     marginBottom: 30,
-    backgroundColor: '#ff8c00',
+    backgroundColor: '#fd6655',
     borderRadius: 5,
   },
   buttonText: {
@@ -94,11 +93,7 @@ class Page extends React.Component {
   }
   //在backForAndroid方法作出需要的操作
   backForAndroid = () => {
-    const resetAction = StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({routeName: 'Home'})],
-    });
-    this.props.navigation.dispatch(resetAction);
+    this.props.navigation.navigate('Home');
     return true;
   };
   _changeAccount = text => {
@@ -131,7 +126,7 @@ class Page extends React.Component {
       this.passwordElement.focus();
       return false;
     }
-
+    _set_public_loading(true);
     HTTP.post('/v2/api/mobile/login', {
       account: account,
       pwd: password,
@@ -153,6 +148,7 @@ class Page extends React.Component {
           ToastAndroid.CENTER,
         );
       }
+      _set_public_loading(false);
     });
   };
   render() {
@@ -163,7 +159,7 @@ class Page extends React.Component {
           <TextInput
             placeholder={'请输入账号'}
             style={styles.input}
-            selectionColor={'#ff8c00'}
+            selectionColor={'#fd6655'}
             value={this.state.account}
             maxLength={16}
             onChangeText={this._changeAccount}
@@ -176,7 +172,7 @@ class Page extends React.Component {
             placeholder={'请输入密码'}
             style={styles.input}
             secureTextEntry={true}
-            selectionColor={'#ff8c00'}
+            selectionColor={'#fd6655'}
             value={this.state.password}
             maxLength={16}
             onChangeText={this._changePassword}
@@ -188,7 +184,11 @@ class Page extends React.Component {
             <Text style={styles.buttonText}>登录</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity activeOpacity={0.7}>
+        <TouchableOpacity
+          activeOpacity={0.7}
+          onPress={() => {
+            this.props.navigation.navigate('Register');
+          }}>
           <Text style={styles.link}>还没有账号，立即注册</Text>
         </TouchableOpacity>
         <Text style={styles.bottomText}>

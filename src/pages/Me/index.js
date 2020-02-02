@@ -11,6 +11,7 @@ import store from '../../script/store';
 import Util from '../../script/util';
 import Icons from 'react-native-vector-icons/AntDesign';
 import {withNavigationFocus} from 'react-navigation';
+import HTTP from '../../script/request';
 
 const {width, height} = Dimensions.get('window');
 const styles = StyleSheet.create({
@@ -43,6 +44,7 @@ const styles = StyleSheet.create({
     height: 66,
     borderRadius: 33,
     position: 'absolute',
+    backgroundColor: '#eee',
     top: -33,
     left: (width - 40) / 2 - 33,
   },
@@ -111,7 +113,13 @@ class Page extends React.Component {
       return;
     };
   }
-  componentDidMount() {}
+  _getPageData = () => {
+    HTTP.post('/v2/api/member/readCount').then(res => {
+      if (res.code === 0) {
+        this.setState({...res.data});
+      }
+    });
+  };
   //页面跳转
   _goToPage = (key, param) => {
     this.props.navigation.navigate(key, param);
@@ -124,7 +132,7 @@ class Page extends React.Component {
     return true;
   };
   render() {
-    const {member} = this.state.base;
+    const {member, todayTime, allTime, reviewNum, rank} = this.state.base;
     return (
       <View style={styles.safeAreaView}>
         <View style={styles.header}>
@@ -147,7 +155,7 @@ class Page extends React.Component {
               <View style={styles.detail}>
                 <View style={styles.col}>
                   <Text style={styles.number} numberOfLines={1}>
-                    {0}min
+                    {todayTime || 0}min
                   </Text>
                   <Text style={styles.nname} numberOfLines={1}>
                     今日已读
@@ -155,7 +163,7 @@ class Page extends React.Component {
                 </View>
                 <View style={styles.col}>
                   <Text style={styles.number} numberOfLines={1}>
-                    {0}h
+                    {allTime || 0}h
                   </Text>
                   <Text style={styles.nname} numberOfLines={1}>
                     累计时长
@@ -163,7 +171,7 @@ class Page extends React.Component {
                 </View>
                 <View style={styles.col}>
                   <Text style={styles.number} numberOfLines={1}>
-                    {0}本
+                    {reviewNum || 0}本
                   </Text>
                   <Text style={styles.nname} numberOfLines={1}>
                     已读图书
@@ -171,7 +179,7 @@ class Page extends React.Component {
                 </View>
                 <View style={styles.col}>
                   <Text style={styles.number} numberOfLines={1}>
-                    {0}
+                    {rank || '无'}
                   </Text>
                   <Text style={styles.nname} numberOfLines={1}>
                     阅读排名
@@ -187,7 +195,10 @@ class Page extends React.Component {
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.viewRight}
-              onPress={this._goToPage.bind(this, 'BookRack', {type: 1})}>
+              onPress={this._goToPage.bind(this, 'BookRack', {
+                type: 0,
+                change: true,
+              })}>
               <Text style={styles.viewTitle}>我的书架</Text>
               <Icons name="right" size={20} color="#ccc" />
             </TouchableOpacity>
@@ -202,7 +213,10 @@ class Page extends React.Component {
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.viewRight}
-              onPress={this._goToPage.bind(this, 'BookRack', {type: 2})}>
+              onPress={this._goToPage.bind(this, 'BookRack', {
+                type: 1,
+                change: true,
+              })}>
               <Text style={styles.viewTitle}>听书收藏</Text>
               <Icons name="right" size={20} color="#ccc" />
             </TouchableOpacity>
@@ -217,7 +231,10 @@ class Page extends React.Component {
             <TouchableOpacity
               activeOpacity={0.7}
               style={styles.viewRight}
-              onPress={this._goToPage.bind(this, 'BookRack', {type: 3})}>
+              onPress={this._goToPage.bind(this, 'BookRack', {
+                type: 2,
+                change: true,
+              })}>
               <Text style={styles.viewTitle}>视频收藏</Text>
               <Icons name="right" size={20} color="#ccc" />
             </TouchableOpacity>

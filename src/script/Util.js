@@ -1,8 +1,8 @@
 const Util = {
   //图片地址处理
   transImgUrl: url => {
-    if (!url || url.trim() === '') {
-      return '../../assets/img/icon-user.png';
+    if (!url || url.trim().length == 0) {
+      return 'http://h5.tuibook.com/assets/img/icon-user.png';
     } else if (url.indexOf('http') !== -1 || url.indexOf('https') !== -1) {
       return url;
     } else {

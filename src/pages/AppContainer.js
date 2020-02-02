@@ -21,6 +21,8 @@ import VideoPlay from './VideoPlay';
 import News from './News';
 import Login from './Login';
 import Reviews from './Reviews';
+import AudioPlay from './AudioPlay';
+import Register from './Register';
 
 const headerRight = navigation => {
   return (
@@ -40,15 +42,9 @@ const headerRight = navigation => {
 const publicRouter = {
   Search: {
     screen: Search,
-    navigationOptions: {
-      headerTitle: '搜索',
-    },
   },
   Setting: {
     screen: Setting,
-    navigationOptions: {
-      headerTitle: '设置',
-    },
   },
   Reviews: {
     screen: Reviews,
@@ -89,7 +85,7 @@ const publicRouter = {
   Video: {
     screen: Video,
     navigationOptions: ({navigation}) => {
-      let str = navigation.state.params.name;
+      let str = navigation.state.params.video_title;
       if (str.length > 10) {
         str = str.substr(0, 12) + '...';
       }
@@ -102,7 +98,7 @@ const publicRouter = {
   Audio: {
     screen: Audio,
     navigationOptions: ({navigation}) => {
-      let str = navigation.state.params.name;
+      let str = navigation.state.params.audio_title;
       if (str.length > 10) {
         str = str.substr(0, 12) + '...';
       }
@@ -115,7 +111,7 @@ const publicRouter = {
   Book: {
     screen: Book,
     navigationOptions: ({navigation}) => {
-      let str = navigation.state.params.name;
+      let str = navigation.state.params.book_name;
       if (str.length > 10) {
         str = str.substr(0, 12) + '...';
       }
@@ -141,11 +137,26 @@ const publicRouter = {
       headerShown: false,
     }),
   },
+  AudioPlay: {
+    screen: AudioPlay,
+    navigationOptions: ({navigation}) => ({
+      headerShown: false,
+    }),
+  },
   News: {
     screen: News,
     navigationOptions: ({navigation}) => ({
       headerShown: false,
     }),
+  },
+  Register: {
+    screen: Register,
+    navigationOptions: ({navigation}) => {
+      return {
+        headerTitle: '新用户注册',
+        headerTintColor: '#fd6655',
+      };
+    },
   },
   Login: {
     screen: Login,
@@ -170,6 +181,7 @@ const navigatorRack = createStackNavigator(
       screen: BookRack,
       navigationOptions: {
         headerTitle: '我的书架',
+        headerShown: false
       },
     },
     ...publicRouter,
@@ -289,7 +301,7 @@ const TabNavigator = createBottomTabNavigator(
     initialRouteName: 'BarMain',
     tabBarOptions: {
       inactiveTintColor: '#aaaaaa',
-      activeTintColor: '#ff8c00',
+      activeTintColor: '#fd6655',
     },
   },
 );

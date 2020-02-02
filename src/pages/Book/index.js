@@ -16,11 +16,16 @@ import Util from '../../script/util';
 import {BlurView} from '@react-native-community/blur';
 import Icons from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import AddReview from '../../components/AddReview';
 import {_set_public_loading} from '../../script/action';
 
 const {width, height} = Dimensions.get('window');
 const ImageWH = (width - 50) / 3; //图书
 const styles = StyleSheet.create({
+  containerParent: {
+    flex: 1,
+    position: 'relative',
+  },
   container: {
     flex: 1,
   },
@@ -138,6 +143,8 @@ const styles = StyleSheet.create({
     marginTop: 15,
     borderTopColor: '#eee',
     borderTopWidth: 1,
+    fontSize: 12,
+    color: '#999'
   },
   notData: {
     flexDirection: 'row',
@@ -210,6 +217,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     paddingTop: 5,
   },
+  lookMore: {
+    paddingTop: 15,
+  },
+  lookMoreText: {
+    fontSize: 12,
+    textAlign: 'center',
+  },
 });
 class Page extends React.Component {
   constructor(props) {
@@ -220,6 +234,10 @@ class Page extends React.Component {
       viewRef: null,
       recommends: null,
       tuijian: [],
+      bookid: null,
+      pageNum: 0,
+      removeMore: true,
+      addVisibale: false,
     };
     store.subscribe(this.storeChange);
   }
@@ -227,13 +245,20 @@ class Page extends React.Component {
     if (!this.state.base.member) {
       this.props.navigation.navigate('Login');
     } else {
-      this.getBookData(this.props.navigation.state.params.id);
+      this.setState(
+        {
+          bookid: this.props.navigation.state.params.book_id,
+        },
+        () => {
+          this.getBookData();
+        },
+      );
     }
   }
-  getBookData = bookid => {
+  getBookData = () => {
     _set_public_loading(true);
     HTTP.post('/api/hbjt/bookdetail', {
-      bookid: bookid,
+      bookid: this.state.bookid,
     }).then(res => {
       if (res.code == 0) {
         this.setState({
@@ -248,20 +273,9 @@ class Page extends React.Component {
       }
       _set_public_loading(false);
     });
-    HTTP.post('/v2/api/mobile/bookReview/list', {
-      book_id: bookid,
-      pageNum: 1,
-      pageSize: 5,
-      book_type: 2,
-    }).then(res => {
-      if (res.code == 0) {
-        this.setState({
-          recommends: res.data.rows,
-        });
-      }
-    });
+    this._resetReviews();
     HTTP.post('/api/hbjt/bookrecommends', {
-      bookid: bookid,
+      bookid: this.state.bookid,
     }).then(res => {
       if (res.code == 0) {
         this.setState({
@@ -286,7 +300,14 @@ class Page extends React.Component {
   //页面跳转
   _goToPage = (key, param) => {
     this.props.navigation.setParams(param);
-    this.getBookData(param.id);
+    this.setState(
+      {
+        bookid: param.book_id,
+      },
+      () => {
+        this.getBookData();
+      },
+    );
     this.myScroll.scrollTo({x: 0, y: 0, animated: true});
   };
   //收藏
@@ -302,7 +323,7 @@ class Page extends React.Component {
             book: {...book},
           });
           ToastAndroid.showWithGravity(
-            '删除成功!',
+            '取消收藏成功!',
             ToastAndroid.SHORT,
             ToastAndroid.CENTER,
           );
@@ -338,154 +359,227 @@ class Page extends React.Component {
       });
     }
   };
+  //重新获取评论
+  _resetReviews = () => {
+    this.setState(
+      {
+        pageNum: 0,
+        removeMore: true,
+        recommends: [],
+      },
+      () => {
+        this._getMoreReviews();
+      },
+    );
+  };
+  //加载评论
+  _getMoreReviews = () => {
+    if (!this.state.removeMore) return false;
+    this.setState(
+      {
+        pageNum: this.state.pageNum + 1,
+      },
+      () => {
+        HTTP.post('/v2/api/mobile/bookReview/list', {
+          book_id: this.state.bookid,
+          pageNum: this.state.pageNum,
+          pageSize: 5,
+          book_type: 2,
+        }).then(res => {
+          let {recommends, removeMore} = this.state;
+          recommends = recommends.concat(res.data.rows);
+          removeMore = recommends.length < res.data.total ? true : false;
+          if (res.code == 0) {
+            this.setState({
+              recommends: [...recommends],
+              removeMore: removeMore,
+            });
+          }
+        });
+      },
+    );
+  };
+  //显示发布评论
+  _showAddReview = bool => {
+    this.setState({
+      addVisibale: bool,
+    });
+  };
   render() {
-    const {book, viewRef, recommends, tuijian} = this.state;
+    const {
+      book,
+      viewRef,
+      recommends,
+      tuijian,
+      addVisibale,
+      removeMore,
+    } = this.state;
     return (
-      <ScrollView style={styles.container} ref={el => (this.myScroll = el)}>
-        {book ? (
-          <View style={styles.content}>
-            <Image
-              ref={img => (this.backgroundImage = img)}
-              source={{uri: Util.transImgUrl(book.book_cover_small)}}
-              style={styles.absolute}
-              onLoadEnd={this.imageLoaded}
-            />
-            {viewRef ? (
-              <BlurView
+      <View style={styles.containerParent}>
+        <ScrollView style={styles.container} ref={el => (this.myScroll = el)}>
+          {book ? (
+            <View style={styles.content}>
+              <Image
+                ref={img => (this.backgroundImage = img)}
+                source={{uri: Util.transImgUrl(book.book_cover_small)}}
                 style={styles.absolute}
-                viewRef={viewRef}
-                blurType="light"
-                blurAmount={10}
+                onLoadEnd={this.imageLoaded}
               />
-            ) : null}
-
-            <View style={styles.header}>
-              <View style={styles.cover}>
-                <Image
-                  source={{uri: Util.transImgUrl(book.book_cover_small)}}
-                  style={styles.coverImg}
+              {viewRef ? (
+                <BlurView
+                  style={styles.absolute}
+                  viewRef={viewRef}
+                  blurType="light"
+                  blurAmount={10}
                 />
-              </View>
-              <View style={styles.detail}>
-                <Text style={styles.bookName}>{book.book_name}</Text>
-                <Text style={styles.bookAuthor}>{book.book_author}</Text>
-                <Text style={styles.bookPublisher}>{book.book_publisher}</Text>
-              </View>
-            </View>
-            <View style={styles.actions}>
-              <TouchableOpacity onPress={this._bookShelf}>
-                {book.shelf_id ? (
-                  <Text style={styles.action2}>取消收藏</Text>
-                ) : (
-                  <Text style={styles.action1}>加入收藏</Text>
-                )}
-              </TouchableOpacity>
-              <Icons
-                name="minus"
-                size={20}
-                color="#ddd"
-                style={styles.action3}
-              />
-              <TouchableOpacity>
-                <Text style={styles.action1}>立即阅读</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.remark}>
-              <Text style={styles.remarkTitle}>书籍简介：</Text>
-              <Text style={styles.remarkText}>{book.book_remark}</Text>
-            </View>
-            <View style={styles.comPlan}>
-              <View style={styles.titleRow}>
-                <Text style={styles.titleName}>书籍评论</Text>
-                <TouchableOpacity style={styles.titleAction}>
-                  <Icons
-                    name="form"
-                    size={14}
-                    color="#787878"
-                    style={styles.titleIcon}
+              ) : null}
+              <View style={styles.header}>
+                <View style={styles.cover}>
+                  <Image
+                    source={{uri: Util.transImgUrl(book.book_cover_small)}}
+                    style={styles.coverImg}
                   />
-                  <Text style={styles.titleText}>写评论</Text>
+                </View>
+                <View style={styles.detail}>
+                  <Text style={styles.bookName}>{book.book_name}</Text>
+                  <Text style={styles.bookAuthor}>{book.book_author}</Text>
+                  <Text style={styles.bookPublisher}>
+                    {book.book_publisher}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.actions}>
+                <TouchableOpacity onPress={this._bookShelf}>
+                  {book.shelf_id ? (
+                    <Text style={styles.action2}>取消收藏</Text>
+                  ) : (
+                    <Text style={styles.action1}>加入收藏</Text>
+                  )}
+                </TouchableOpacity>
+                <Icons
+                  name="minus"
+                  size={20}
+                  color="#ddd"
+                  style={styles.action3}
+                />
+                <TouchableOpacity>
+                  <Text style={styles.action1}>立即阅读</Text>
                 </TouchableOpacity>
               </View>
-              {/* 还没有评论 */}
-              {recommends && recommends.length == 0 ? (
-                <View style={styles.notData}>
-                  <EvilIcons
-                    name="comment"
-                    size={22}
-                    color="#787878"
-                    style={styles.unIcon}
-                  />
-                  <Text style={styles.unText}>还没有评论</Text>
+              <View style={styles.remark}>
+                <Text style={styles.remarkTitle}>书籍简介：</Text>
+                <Text style={styles.remarkText}>{book.book_remark}</Text>
+              </View>
+              <View style={styles.comPlan}>
+                <View style={styles.titleRow}>
+                  <Text style={styles.titleName}>书籍评论</Text>
+                  <TouchableOpacity
+                    style={styles.titleAction}
+                    onPress={this._showAddReview.bind(this, true)}>
+                    <Icons
+                      name="form"
+                      size={14}
+                      color="#787878"
+                      style={styles.titleIcon}
+                    />
+                    <Text style={styles.titleText}>写评论</Text>
+                  </TouchableOpacity>
                 </View>
-              ) : null}
-              <View style={styles.commAll}>
-                {recommends &&
-                  recommends.map((item, index) => {
-                    return (
-                      <View key={`comm-${index}`} style={styles.commItem}>
-                        <View style={styles.comCover}>
-                          <Image
-                            source={{
-                              uri: Util.transImgUrl(item.icon),
-                            }}
-                            style={styles.comImg}
-                          />
-                        </View>
-                        <View style={styles.comDetail}>
-                          <View style={styles.comRow1}>
-                            <Text style={styles.comNick}>{item.nick_name}</Text>
-                            <Text style={styles.comTime}>
-                              {item.create_time}
+                {/* 还没有评论 */}
+                {recommends && recommends.length == 0 ? (
+                  <View style={styles.notData}>
+                    <EvilIcons
+                      name="comment"
+                      size={22}
+                      color="#787878"
+                      style={styles.unIcon}
+                    />
+                    <Text style={styles.unText}>还没有评论</Text>
+                  </View>
+                ) : null}
+                <View style={styles.commAll}>
+                  {recommends &&
+                    recommends.map((item, index) => {
+                      return (
+                        <View key={`comm-${index}`} style={styles.commItem}>
+                          <View style={styles.comCover}>
+                            <Image
+                              source={{
+                                uri: Util.transImgUrl(item.icon),
+                              }}
+                              style={styles.comImg}
+                            />
+                          </View>
+                          <View style={styles.comDetail}>
+                            <View style={styles.comRow1}>
+                              <Text style={styles.comNick}>
+                                {item.nick_name}
+                              </Text>
+                              <Text style={styles.comTime}>
+                                {item.create_time}
+                              </Text>
+                            </View>
+                            <Text style={styles.reviewContent}>
+                              {item.review_content}
                             </Text>
                           </View>
-                          <Text style={styles.reviewContent}>
-                            {item.review_content}
+                        </View>
+                      );
+                    })}
+                  {removeMore ? (
+                    <TouchableOpacity
+                      style={styles.lookMore}
+                      onPress={this._getMoreReviews}>
+                      <Text style={styles.lookMoreText}>查看更多评论</Text>
+                    </TouchableOpacity>
+                  ) : null}
+                </View>
+              </View>
+
+              <View style={styles.comPlan}>
+                <View style={styles.titleRow}>
+                  <Text style={styles.titleName}>相关推荐</Text>
+                </View>
+                <View style={styles.tuijians}>
+                  {tuijian.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        activeOpacity={0.8}
+                        key={`book-${index}`}
+                        onPress={this._goToPage.bind(this, 'Book', {...item})}>
+                        <View style={styles.col3}>
+                          <Image
+                            style={styles.bookCover}
+                            source={{
+                              uri: Util.transImgUrl(item.book_cover_small),
+                            }}
+                          />
+                          <Text style={styles.bookName1} numberOfLines={1}>
+                            {item.book_name}
                           </Text>
                         </View>
-                      </View>
+                      </TouchableOpacity>
                     );
                   })}
+                </View>
               </View>
-            </View>
 
-            <View style={styles.comPlan}>
-              <View style={styles.titleRow}>
-                <Text style={styles.titleName}>相关推荐</Text>
-              </View>
-              <View style={styles.tuijians}>
-                {tuijian.map((item, index) => {
-                  return (
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      key={`book-${index}`}
-                      onPress={this._goToPage.bind(this, 'Book', {
-                        id: item.book_id,
-                        name: item.book_name,
-                      })}>
-                      <View style={styles.col3}>
-                        <Image
-                          style={styles.bookCover}
-                          source={{
-                            uri: Util.transImgUrl(item.book_cover_small),
-                          }}
-                        />
-                        <Text style={styles.bookName1} numberOfLines={1}>
-                          {item.book_name}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
+              <Text style={styles.footerCopy}>
+                2017-2027 @ All Rights Reservd By 微悦读
+              </Text>
             </View>
-
-            <Text style={styles.footerCopy}>
-              2017-2027 @ All Rights Reservd By 微悦读
-            </Text>
-          </View>
+          ) : null}
+        </ScrollView>
+        {/* 发布评论 */}
+        {addVisibale ? (
+          <AddReview
+            book_id={this.state.bookid}
+            ref={el => (this.addReviewElement = el)}
+            _resetReviews={this._resetReviews}
+            _showAddReview={this._showAddReview}
+          />
         ) : null}
-      </ScrollView>
+      </View>
     );
   }
 }

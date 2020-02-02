@@ -21,6 +21,9 @@ export default (state = defaultState, action) => {
       newState.member_token = newState.member.token;
       newState.org_id = newState.member.org_id;
       break;
+    case 'update_member_info':
+      newState.member = {...action.data};
+      break;
     case 'set_public_loading':
       newState.loading = action.data;
       break;

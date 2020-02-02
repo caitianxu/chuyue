@@ -98,3 +98,15 @@ export const _change_member_info = (param, data) => {
     resolve();
   });
 };
+
+//用户资料变更
+export const _update_member_info = (param, data) => {
+  return new Promise(function(resolve, reject) {
+    const action = {
+      type: 'update_member_info',
+      data: {...param},
+    };
+    store.dispatch(action);
+    resolve();
+  });
+};

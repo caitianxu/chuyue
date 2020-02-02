@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import Video from 'react-native-video';
 import Orientation from 'react-native-orientation';
@@ -18,6 +19,7 @@ class Page extends React.Component {
     super(props);
     this.state = {
       uri: null,
+      title: null,
       width: 750,
       height: 350,
       loading: true,
@@ -32,6 +34,7 @@ class Page extends React.Component {
     StatusBar.setHidden(true);
     this.setState({
       uri: this.props.navigation.state.params.uri,
+      title: this.props.navigation.state.params.title,
     });
   }
   componentWillUnmount() {
@@ -130,9 +133,14 @@ class Page extends React.Component {
       });
     }
   };
+  //返回
+  _goBack = () => {
+    this.props.navigation.goBack();
+  }
   render() {
     const {
       uri,
+      title,
       width,
       height,
       play,
@@ -155,6 +163,27 @@ class Page extends React.Component {
         width: width,
         height: height,
         backgroundColor: '#000000',
+      },
+      headerControl: {
+        flexDirection: 'row',
+        height: 44,
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: width,
+        zIndex: 1002,
+        padding: 10,
+      },
+      goBack: {
+        padding: 10,
+      },
+      videoTitle: {
+        flex: 1,
+        color: '#fff',
+        fontSize: 18,
+        paddingRight: 10
       },
       control: {
         flexDirection: 'row',
@@ -231,6 +260,18 @@ class Page extends React.Component {
             />
           ) : null}
         </TouchableOpacity>
+        {showControl ? (
+          <TouchableWithoutFeedback>
+            <View style={styles.headerControl}>
+              <TouchableOpacity style={styles.goBack} onPress={this._goBack}>
+                <Icons name="arrow-back" size={26} color="#fff" />
+              </TouchableOpacity>
+              <Text style={styles.videoTitle} numberOfLines={1}>
+                {title}
+              </Text>
+            </View>
+          </TouchableWithoutFeedback>
+        ) : null}
         {showControl ? (
           <View style={styles.control}>
             <TouchableOpacity onPress={this._play}>

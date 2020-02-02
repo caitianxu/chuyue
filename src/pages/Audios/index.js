@@ -234,10 +234,7 @@ class Page extends React.Component {
     const _renderItemView = ({item}) => {
       return (
         <TouchableOpacity
-          onPress={this._goToPage.bind(this, 'Book', {
-            id: item.audio_id,
-            name: item.audio_title,
-          })}>
+          onPress={this._goToPage.bind(this, 'Audio', {...item})}>
           <View style={styles.bookRow}>
             <Image
               source={{uri: Util.transImgUrl(item.cover_url_small)}}

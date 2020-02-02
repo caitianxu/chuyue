@@ -28,6 +28,36 @@ const HTTP = {
         });
     });
   },
+  upload: params => {
+    let formData = new FormData();
+    let file = {
+      uri: params.uri,
+      type: 'multipart/form-data',
+      name: 'image.png',
+    };
+    formData.append('file', file);
+    return new Promise((resolve, reject) => {
+      fetch(`${ctxPath}/file/upload`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      })
+        .then(response => {
+          return response.json();
+        })
+        .then(response => {
+          resolve(response);
+        })
+        .catch(error => {
+          reject({
+            code: 400,
+            message: '数据请求异常',
+          });
+        });
+    });
+  },
   post: (url, params) => {
     if (!params) params = {};
     const {
@@ -49,7 +79,6 @@ const HTTP = {
     if (url.indexOf('http://') == -1 && url.indexOf('https://') == -1) {
       newUrl = `${ctxPath}${url}`;
     }
-    console.log('参数:', newParam)
     return new Promise((resolve, reject) => {
       fetch(newUrl, {
         method: 'POST',
