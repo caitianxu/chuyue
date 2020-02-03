@@ -23,6 +23,7 @@ import Login from './Login';
 import Reviews from './Reviews';
 import AudioPlay from './AudioPlay';
 import Register from './Register';
+import Reader from './Reader';
 
 const headerRight = navigation => {
   return (
@@ -173,6 +174,12 @@ const publicRouter = {
       },
     }),
   },
+  Reader: {
+    screen: Reader,
+    navigationOptions: ({navigation}) => ({
+      headerShown: false,
+    }),
+  },
 };
 // 书架
 const navigatorRack = createStackNavigator(
@@ -181,7 +188,7 @@ const navigatorRack = createStackNavigator(
       screen: BookRack,
       navigationOptions: {
         headerTitle: '我的书架',
-        headerShown: false
+        headerShown: false,
       },
     },
     ...publicRouter,

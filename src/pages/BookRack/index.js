@@ -206,10 +206,9 @@ class Page extends React.Component {
                     activeOpacity={0.8}
                     key={`book-${index}`}
                     onLongPress={this._changeEdit}
-                    onPress={this._goToPage.bind(this, 'Book', {
-                      ...item,
-                      book_id: item.bk_id,
-                      book_name: item.bk_name,
+                    onPress={this._goToPage.bind(this, 'Reader', {
+                      bookid: item.bk_id,
+                      bookname: item.bk_name,
                     })}>
                     <View style={styles.col3}>
                       <Image

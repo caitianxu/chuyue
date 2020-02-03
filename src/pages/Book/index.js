@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#eee',
     borderTopWidth: 1,
     fontSize: 12,
-    color: '#999'
+    color: '#999',
   },
   notData: {
     flexDirection: 'row',
@@ -462,7 +462,13 @@ class Page extends React.Component {
                   color="#ddd"
                   style={styles.action3}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.props.navigation.navigate('Reader', {
+                      bookid: book.book_id,
+                      bookname: book.book_name,
+                    });
+                  }}>
                   <Text style={styles.action1}>立即阅读</Text>
                 </TouchableOpacity>
               </View>
