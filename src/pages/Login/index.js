@@ -131,6 +131,7 @@ class Page extends React.Component {
       account: account,
       pwd: password,
     }).then(res => {
+      console.log(res)
       if (res.code == 0) {
         _change_member_info(
           {

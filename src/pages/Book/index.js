@@ -38,6 +38,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     zIndex: 1,
+    borderBottomWidth: 1,
+    backgroundColor: '#fff',
+    borderBottomColor: '#f4f4f4'
   },
   content: {
     flex: 1,
@@ -70,15 +73,15 @@ const styles = StyleSheet.create({
   },
   bookName: {
     fontSize: 20,
-    color: '#fff',
+    color: '#000',
     marginBottom: 5,
   },
   bookAuthor: {
-    color: '#f4f4f4',
+    color: '#666',
     marginBottom: 5,
   },
   bookPublisher: {
-    color: '#f4f4f4',
+    color: '#666',
   },
   actions: {
     backgroundColor: '#fff',
@@ -419,12 +422,13 @@ class Page extends React.Component {
         <ScrollView style={styles.container} ref={el => (this.myScroll = el)}>
           {book ? (
             <View style={styles.content}>
-              <Image
+              {/* <Image
                 ref={img => (this.backgroundImage = img)}
                 source={{uri: Util.transImgUrl(book.book_cover_small)}}
                 style={styles.absolute}
                 onLoadEnd={this.imageLoaded}
-              />
+              /> */}
+              <View  style={styles.absolute}></View>
               {viewRef ? (
                 <BlurView
                   style={styles.absolute}

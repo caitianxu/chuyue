@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
   text: {
     paddingLeft: 12,
     paddingRight: 10,
+    textAlign: 'center'
   },
   activeText: {
     paddingLeft: 12,
@@ -50,6 +51,7 @@ const styles = StyleSheet.create({
     color: '#fd6655',
     borderLeftColor: '#fd6655',
     borderLeftWidth: 3,
+    textAlign: 'center'
   },
   rowLine: {
     height: 1,

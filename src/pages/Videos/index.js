@@ -42,14 +42,14 @@ const styles = StyleSheet.create({
   },
   text: {
     paddingLeft: 12,
-    paddingRight: 10,
+    paddingRight: 10
   },
   activeText: {
     paddingLeft: 12,
     paddingRight: 10,
     color: '#fd6655',
     borderLeftColor: '#fd6655',
-    borderLeftWidth: 3,
+    borderLeftWidth: 3
   },
   rowLine: {
     height: 1,
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 15,
     bottom: 0,
-    padding: 5
+    padding: 5,
   },
   bookName: {
     color: '#fff',
@@ -266,7 +266,9 @@ class Page extends React.Component {
                     : styles.cat
                 }>
                 <Text
-                  numberOfLines={1}
+                  numberOfLines={
+                    selCat && selCat.video_cat_id == cat.video_cat_id ? 2 : 1
+                  }
                   style={
                     selCat && selCat.video_cat_id == cat.video_cat_id
                       ? styles.activeText

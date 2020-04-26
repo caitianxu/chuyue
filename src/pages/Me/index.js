@@ -110,6 +110,10 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
   },
+  footerVersion: {
+    textAlign: 'center',
+    color: '#ddd'
+  }
 });
 class Page extends React.Component {
   constructor(props) {
@@ -162,7 +166,14 @@ class Page extends React.Component {
     ]);
   };
   render() {
-    const {member, todayTime, allTime, reviewNum, rank} = this.state.base;
+    const {
+      member,
+      todayTime,
+      allTime,
+      reviewNum,
+      rank,
+      version,
+    } = this.state.base;
     return (
       <View style={styles.safeAreaView}>
         <View style={styles.header}>
@@ -306,6 +317,7 @@ class Page extends React.Component {
             <Text style={styles.buttonText}>注销</Text>
           </View>
         </TouchableOpacity>
+        <Text style={styles.footerVersion}>{version}</Text>
       </View>
     );
   }

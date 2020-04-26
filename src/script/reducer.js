@@ -7,6 +7,7 @@ const defaultState = {
   client_type: 'QY',
   client: {},
   loading: false,
+  version: '1.0.0.3'
 };
 
 export default (state = defaultState, action) => {

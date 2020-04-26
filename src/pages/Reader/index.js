@@ -200,6 +200,13 @@ export class index extends React.Component {
   }
   componentDidMount() {
     StatusBar.setBarStyle('dark-content');
+    _getCookie('readerColor').then(cookie => {
+      if (cookie) {
+        this.setState({
+          colorIndex: cookie,
+        });
+      }
+    });
     let schedule = 0;
     _getCookie(`schedule-${this.props.navigation.state.params.bookid}`).then(
       cookie => {
@@ -216,6 +223,7 @@ export class index extends React.Component {
             HTTP.post('/v3/api/book/chapterTree', {
               book_id: this.state.bookid,
             }).then(res => {
+              console.log(res)
               if (res.code == 0) {
                 let chapterArray = [];
                 res.data.chapters.forEach((item, index) => {
@@ -292,12 +300,23 @@ export class index extends React.Component {
   };
   //获取章节内容
   _getChapterContent = () => {
-    let {chapter, bookid, contents} = this.state;
+    let {chapter, bookid, contents, schedule, book} = this.state;
     _setCookie(`schedule-${bookid}`, this.state.schedule);
+    //更新阅读记录
+    HTTP.post('/v3/api/bookShelf/updateMemberReadRecord', {
+      last_chapter_id: chapter.id,
+      chapter_name: chapter.name,
+      schedule: chapter.id + '|' + schedule,
+      book_type: 2,
+      book_id: bookid,
+      book_name: book.book_name,
+      book_cover: book.book_cover_small,
+    });
     HTTP.post('/v4/api/book/getChapterContent', {
       chapter_id: chapter.id,
       book_id: bookid,
     }).then(res => {
+      console.log(res)
       if (res.code == 0) {
         let newContent = res.data.content;
         let strs = res.data.content.match(/<body[^>]*>([\s\S]*)<\/body>/);
@@ -363,6 +382,7 @@ export class index extends React.Component {
     this.setState({
       colorIndex: index,
     });
+    _setCookie(`readerColor`, index);
   };
   //设置字体
   _setfontSize = n => {
@@ -428,6 +448,7 @@ export class index extends React.Component {
                   marginBottom: 10,
                   textAlign: 'justify',
                   fontSize: fontSize,
+                  lineHeight: 25
                 },
               }}
             />

@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   ToastAndroid,
+  ScrollView,
 } from 'react-native';
 import {_set_public_loading} from '../../script/action';
 import store from '../../script/store';
@@ -29,9 +30,10 @@ const styles = StyleSheet.create({
   },
   sprint: {
     width: width,
-    height: width,
+    // height: width,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 20,
   },
   audioBorder: {
     elevation: 15,
@@ -62,11 +64,12 @@ const styles = StyleSheet.create({
   audioName: {
     textAlign: 'center',
     fontWeight: 'bold',
-    fontSize: 24,
+    fontSize: 20,
     color: '#666',
-    marginBottom: 30,
+    marginBottom: 15,
     paddingLeft: 30,
     paddingRight: 30,
+    marginTop: 15,
   },
   actions: {
     flexDirection: 'row',
@@ -90,6 +93,23 @@ const styles = StyleSheet.create({
   action3: {
     paddingLeft: 5,
     paddingRight: 5,
+  },
+  audioRemarkParent: {
+    height: width / 2,
+    marginBottom: 20,
+  },
+  audioRemark: {
+    paddingLeft: 20,
+    paddingRight: 20,
+    lineHeight: 22,
+    textAlign: 'justify',
+  },
+  action0: {
+    position: 'absolute',
+    left: 10,
+    color: '#fff',
+    padding: 10,
+    top: 30,
   },
 });
 class Page extends React.Component {
@@ -361,6 +381,14 @@ class Page extends React.Component {
       <ImageBackground
         source={require('../../assets/img/audio-bg.jpg')}
         style={styles.safeAreaView}>
+        <TouchableOpacity
+          style={styles.action0} 
+          onPress={() => {
+            this.props.navigation.goBack();
+          }}>
+          <Entypo name="chevron-thin-left" size={22} />
+        </TouchableOpacity>
+
         <View style={styles.sprint}>
           {audio ? (
             <TouchableWithoutFeedback onPress={this._changeAnimated}>
@@ -368,17 +396,17 @@ class Page extends React.Component {
                 <Animated.Image
                   source={{uri: Util.transImgUrl(audio.cover_url_small)}}
                   style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: 75,
-                    transform: [
-                      {
-                        rotateZ: this.state.rotateValue.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: ['0deg', '360deg'],
-                        }),
-                      },
-                    ],
+                    width: 130,
+                    height: 180,
+                    // borderRadius: 75,
+                    // transform: [
+                    //   {
+                    //     rotateZ: this.state.rotateValue.interpolate({
+                    //       inputRange: [0, 1],
+                    //       outputRange: ['0deg', '360deg'],
+                    //     }),
+                    //   },
+                    // ],
                   }}
                 />
               </View>
@@ -388,6 +416,13 @@ class Page extends React.Component {
         <Text style={styles.audioName} numberOfLines={1}>
           {audio ? audio.audio_title : ''}
         </Text>
+        <View style={styles.audioRemarkParent}>
+          <ScrollView>
+            <Text style={styles.audioRemark}>
+              &nbsp;&nbsp;{audio ? audio.audio_remark : ''}
+            </Text>
+          </ScrollView>
+        </View>
         <View style={styles.control}>
           <Text style={styles.time}>{Util.formatTime(currentTime)}</Text>
           <Slider

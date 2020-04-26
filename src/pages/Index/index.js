@@ -126,6 +126,17 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     alignItems: 'center',
   },
+  bannerParent:{
+    position: 'relative'
+  },
+  bannerName: {
+    position: 'absolute',
+    width: width,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    color: '#fff',
+    padding: 10
+  }
 });
 export default class Page extends React.Component {
   constructor(props) {
@@ -221,7 +232,7 @@ export default class Page extends React.Component {
               activeDot={<View style={styles.weiperAtDot} />}>
               {hotVideos.map((item, index) => {
                 return (
-                  <View key={`swiper-${index}`}>
+                  <View key={`swiper-${index}`} style={styles.bannerParent}>
                     <TouchableOpacity
                       onPress={this._goToPage.bind(this, 'Video', {...item})}>
                       <Image
@@ -229,6 +240,7 @@ export default class Page extends React.Component {
                         style={styles.bannerImg}
                         resizeMode="cover"
                       />
+                      <Text style={styles.bannerName} numberOfLines={1}>{item.video_title}</Text>
                     </TouchableOpacity>
                   </View>
                 );
